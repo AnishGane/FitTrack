@@ -20,8 +20,9 @@ import { SignInUser } from "@/server/users"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { setPassword } from "better-auth/api"
 
 const LoginFormSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -34,6 +35,7 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -81,7 +83,7 @@ export function LoginForm({
           name="email"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.invalid} className="gap-1">
               <FieldLabel htmlFor="form-rhf-demo-email">
                 Email
               </FieldLabel>
@@ -91,6 +93,7 @@ export function LoginForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="your email address"
                 autoComplete="off"
+                className="border border-black/50 "
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -102,18 +105,26 @@ export function LoginForm({
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.invalid} className="gap-1">
               <FieldLabel htmlFor="form-rhf-demo-password">
                 Password
               </FieldLabel>
-              <Input
-                {...field}
-                id="form-rhf-demo-password"
-                aria-invalid={fieldState.invalid}
-                placeholder="******"
-                autoComplete="off"
-                type="password"
-              />
+              <div className="relative">
+                <Input
+                  {...field}
+                  id="form-rhf-demo-password"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="******"
+                  autoComplete="off"
+                  type={showPassword ? "text" : "password"}
+                  className="border border-black/50"
+                />
+                {showPassword ? (
+                  <EyeIcon onClick={() => setShowPassword(false)} className="size-3.5 absolute right-3 top-2.5 cursor-pointer text-black" />
+                ) : (
+                  <EyeOffIcon onClick={() => setShowPassword(true)} className="size-3.5 absolute top-2.5 right-3 cursor-pointer text-black" />
+                )}
+              </div>
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
@@ -130,7 +141,7 @@ export function LoginForm({
             ) : "Login"}
           </Button>
         </Field>
-        <FieldSeparator className="*:data-[slot=field-separator-content]:bg-muted dark:*:data-[slot=field-separator-content]:bg-card">
+        <FieldSeparator>
           Or continue with
         </FieldSeparator>
         <Field>

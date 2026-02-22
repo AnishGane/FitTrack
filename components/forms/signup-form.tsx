@@ -17,7 +17,7 @@ import { SignUpUser } from "@/server/users"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react"
 import { Google } from "../ui/google"
 import { authClient } from "@/lib/auth-client"
 
@@ -38,6 +38,10 @@ export function SignupForm({
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState<Record<string, boolean>>({
+    password: false,
+    confirmPassword: false
+  });
 
   const form = useForm<z.infer<typeof SignUpFormSchema>>({
     resolver: zodResolver(SignUpFormSchema),
@@ -90,7 +94,7 @@ export function SignupForm({
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.invalid} className="gap-1">
               <FieldLabel htmlFor="form-rhf-demo-name">
                 Full Name
               </FieldLabel>
@@ -100,6 +104,7 @@ export function SignupForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="Ashley Smith"
                 autoComplete="off"
+                className="border border-black/50"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -111,7 +116,7 @@ export function SignupForm({
           name="email"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.invalid} className="gap-1">
               <FieldLabel htmlFor="form-rhf-demo-email">
                 Email
               </FieldLabel>
@@ -121,6 +126,7 @@ export function SignupForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="your email address"
                 autoComplete="off"
+                className="border border-black/50"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -135,18 +141,33 @@ export function SignupForm({
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.invalid} className="gap-1">
               <FieldLabel htmlFor="form-rhf-demo-password">
                 Password
               </FieldLabel>
-              <Input
-                {...field}
-                id="form-rhf-demo-password"
-                aria-invalid={fieldState.invalid}
-                placeholder="******"
-                autoComplete="off"
-                type="password"
-              />
+              <div className="relative">
+
+                <Input
+                  {...field}
+                  id="form-rhf-demo-password"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="******"
+                  autoComplete="off"
+                  type={showPassword.password ? "text" : "password"}
+                  className="border border-black/50"
+                />
+                {showPassword.password ? (
+                  <EyeIcon onClick={() => setShowPassword({
+                    ...showPassword,
+                    password: false
+                  })} className="size-3.5 absolute right-3 top-2.5 cursor-pointer text-black" />
+                ) : (
+                  <EyeOffIcon onClick={() => setShowPassword({
+                    ...showPassword,
+                    password: true
+                  })} className="size-3.5 absolute top-2.5 right-3 cursor-pointer text-black" />
+                )}
+              </div>
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
@@ -160,18 +181,33 @@ export function SignupForm({
           name="confirmPassword"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.invalid} className="gap-1">
               <FieldLabel htmlFor="form-rhf-demo-confirmPassword">
                 Confirm Password
               </FieldLabel>
-              <Input
-                {...field}
-                id="form-rhf-demo-confirmPassword"
-                aria-invalid={fieldState.invalid}
-                placeholder="******"
-                autoComplete="off"
-                type="password"
-              />
+              <div className="relative">
+
+                <Input
+                  {...field}
+                  id="form-rhf-demo-confirmPassword"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="******"
+                  autoComplete="off"
+                  type={showPassword.confirmPassword ? "text" : "password"}
+                  className="border border-black/50"
+                />
+                {showPassword.confirmPassword ? (
+                  <EyeIcon onClick={() => setShowPassword({
+                    ...showPassword,
+                    confirmPassword: false
+                  })} className="size-3.5 absolute right-3 top-2.5 cursor-pointer text-black" />
+                ) : (
+                  <EyeOffIcon onClick={() => setShowPassword({
+                    ...showPassword,
+                    confirmPassword: true
+                  })} className="size-3.5 absolute top-2.5 right-3 cursor-pointer text-black" />
+                )}
+              </div>
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
@@ -191,7 +227,7 @@ export function SignupForm({
             ) : "Create account"}
           </Button>
         </Field>
-        <FieldSeparator className="*:data-[slot=field-separator-content]:bg-muted dark:*:data-[slot=field-separator-content]:bg-card">
+        <FieldSeparator>
           Or continue with
         </FieldSeparator>
         <Field>
