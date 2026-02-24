@@ -22,10 +22,9 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react"
 import Link from "next/link"
-import { setPassword } from "better-auth/api"
 
 const LoginFormSchema = z.object({
-  email: z.string().email("Please enter a valid email"),
+  email: z.string().email("Please enter a valid email").toLowerCase(),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -92,7 +91,8 @@ export function LoginForm({
                 id="form-rhf-demo-email"
                 aria-invalid={fieldState.invalid}
                 placeholder="your email address"
-                autoComplete="off"
+                autoComplete="on"
+                autoFocus={true}
                 className="border border-black/50 "
               />
               {fieldState.invalid && (

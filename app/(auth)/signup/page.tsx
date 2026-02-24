@@ -2,19 +2,24 @@ import { SignupForm } from "@/components/forms/signup-form"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { Suspense } from "react"
 
 export default async function SignupPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  async function SignupGuard() {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    })
 
-  if (session) {
-    redirect("/dashboard");
+    if (session) {
+      redirect("/dashboard")
+    }
+
+    return <SignupForm />
   }
 
   return (
-    <div>
-      <SignupForm />
-    </div>
+    <Suspense fallback={null}>
+      <SignupGuard />
+    </Suspense>
   )
 }

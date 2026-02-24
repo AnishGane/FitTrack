@@ -1,9 +1,21 @@
-import React from 'react'
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
-const DashboardPage = () => {
-    return (
-        <div>DashboardPage</div>
-    )
+export default function Page() {
+  return (
+    <h1>Dashboard</h1>
+  )
 }
-
-export default DashboardPage

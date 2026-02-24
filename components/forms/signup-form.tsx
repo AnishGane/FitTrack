@@ -25,7 +25,7 @@ import { authClient } from "@/lib/auth-client"
 
 const SignUpFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email("Please enter a valid email address").toLowerCase(),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -127,7 +127,8 @@ export function SignupForm({
                 id="form-rhf-demo-email"
                 aria-invalid={fieldState.invalid}
                 placeholder="ashleysmith@gmail.com"
-                autoComplete="off"
+                autoComplete="on"
+                autoFocus={true}
                 className="border border-black/50"
               />
               {fieldState.invalid && (
