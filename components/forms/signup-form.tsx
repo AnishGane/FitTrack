@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -124,7 +126,7 @@ export function SignupForm({
                 {...field}
                 id="form-rhf-demo-email"
                 aria-invalid={fieldState.invalid}
-                placeholder="your email address"
+                placeholder="ashleysmith@gmail.com"
                 autoComplete="off"
                 className="border border-black/50"
               />
@@ -151,7 +153,7 @@ export function SignupForm({
                   {...field}
                   id="form-rhf-demo-password"
                   aria-invalid={fieldState.invalid}
-                  placeholder="******"
+                  placeholder="••••••"
                   autoComplete="off"
                   type={showPassword.password ? "text" : "password"}
                   className="border border-black/50"
@@ -191,7 +193,7 @@ export function SignupForm({
                   {...field}
                   id="form-rhf-demo-confirmPassword"
                   aria-invalid={fieldState.invalid}
-                  placeholder="******"
+                  placeholder="••••••"
                   autoComplete="off"
                   type={showPassword.confirmPassword ? "text" : "password"}
                   className="border border-black/50"

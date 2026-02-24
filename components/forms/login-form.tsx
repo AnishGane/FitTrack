@@ -114,7 +114,7 @@ export function LoginForm({
                   {...field}
                   id="form-rhf-demo-password"
                   aria-invalid={fieldState.invalid}
-                  placeholder="******"
+                  placeholder="••••••"
                   autoComplete="off"
                   type={showPassword ? "text" : "password"}
                   className="border border-black/50"
