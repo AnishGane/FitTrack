@@ -24,6 +24,7 @@ import { getInitialsFromName } from "@/lib/helper"
 import { signOutUser } from "@/server/users"
 import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon, Settings } from "lucide-react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export function NavUser({ image, name, email }: {
   image: string
@@ -84,10 +85,13 @@ export function NavUser({ image, name, email }: {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Settings className=""
-                />
-                Setting
+                <Link href="/goals" className="flex items-center justify-between gap-1.5">
+                  <Settings
+                  />
+                  Setting
+                </Link>
               </DropdownMenuItem>
+
 
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

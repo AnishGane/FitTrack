@@ -46,43 +46,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarHeader className="py-4">
         <div className="flex justify-between items-center">
-          <Link
-            href="/"
-
-            className="
-        flex items-center gap-2 font-semibold text-2xl px-2
+          <Link href="/"
+            className="flex items-center gap-2 font-semibold text-2xl px-2
         group-data-[collapsible=icon]:justify-center
-        group-data-[collapsible=icon]:px-1.5
-      "
-          >
-            {/* EXPANDED → Show Salad */}
-            <div
-              className="
-          bg-sidebar-primary text-sidebar-primary-foreground
-          flex size-9 shrink-0 items-center justify-center rounded-md
-          group-data-[collapsible=icon]:hidden
-        "
-            >
-              <Salad className="size-5" />
-            </div>
-
+        group-data-[collapsible=icon]:px-1.5">
             {/* COLLAPSED → Show Trigger */}
             <SidebarTrigger
               className="
-          hidden
-          group-data-[collapsible=icon]:flex
-          size-9
-          items-center
-          justify-center
-          rounded-md
-          text-black
-          hover:text-white
-          cursor-pointer
-          hover:bg-primary
-          
-        "
+                hidden
+                group-data-[collapsible=icon]:flex
+                size-9
+                items-center
+                justify-center
+                rounded-md
+                text-black
+                cursor-pointer
+                hover:bg-primary/30"
             />
-
             <span className="truncate tracking-tight group-data-[collapsible=icon]:hidden">
               FitTrack
             </span>
@@ -92,12 +72,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarTrigger
             className="
         cursor-pointer
-        hover:text-white
         group-data-[collapsible=icon]:hidden
-        hover:bg-primary
+        hover:bg-primary/30
       "
           />
-
         </div>
       </SidebarHeader>
 
