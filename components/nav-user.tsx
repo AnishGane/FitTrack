@@ -25,6 +25,7 @@ import { signOutUser } from "@/server/users"
 import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon, Settings } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useTheme } from "next-themes"
 
 export function NavUser({ image, name, email }: {
   image: string
@@ -34,10 +35,12 @@ export function NavUser({ image, name, email }: {
   const { isMobile } = useSidebar()
   const router = useRouter();
   const initials = getInitialsFromName(name);
+  const { setTheme } = useTheme();
 
   const handleLogOut = async () => {
     try {
       await signOutUser();
+      setTheme("light");
       router.push("/login");
     } catch (err) {
       console.error(err)

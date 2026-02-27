@@ -48,7 +48,7 @@ const StreakCard = ({ data }: StreakCardProp) => {
     const { currentStreak, consistencyScore, totalWorkoutsThisWeek, targetDaysPerWeek } = data;
 
     return (
-        <Card className="bg-card border-border sm:p-4 sm:py-5">
+        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-3xl">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-semibold uppercase text-muted-foreground">
                     Streak &amp; Consistency
@@ -67,7 +67,7 @@ const StreakCard = ({ data }: StreakCardProp) => {
                                 {currentStreak}
                             </p>
                         </div>
-                        <p className="text-xs sm:ml-3 text-muted-foreground mt-1">Days active streak</p>
+                        <p className="text-xs ml-1 sm:ml-3 text-muted-foreground mt-1">Days active streak</p>
                     </div>
 
                     {/* Circular Progress */}

@@ -59,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 items-center
                 justify-center
                 rounded-md
-                text-black
+                text-foreground
                 cursor-pointer
                 hover:bg-primary/30"
             />
