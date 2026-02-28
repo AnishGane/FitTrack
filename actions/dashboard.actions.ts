@@ -16,46 +16,46 @@ export async function getUserId(): Promise<string> {
 }
 
 // Get Recent Workout Logs (for table + algorithms)
-export async function getRecentWorkoutLogs(limit = 50) {
-  const userId = await getUserId();
+// export async function getRecentWorkoutLogs(limit = 50) {
+//   const userId = await getUserId();
 
-  return db
-    .select()
-    .from(workoutLogs)
-    .where(eq(workoutLogs.userId, userId))
-    .limit(limit)
-    .orderBy(desc(workoutLogs.loggedAt));
-}
+//   return db
+//     .select()
+//     .from(workoutLogs)
+//     .where(eq(workoutLogs.userId, userId))
+//     .limit(limit)
+//     .orderBy(desc(workoutLogs.loggedAt));
+// }
 
-// Get Logs for Chart (last 30 days)
-export async function getMonthlyWorkoutLogs() {
-  const userId = await getUserId();
+// // Get Logs for Chart (last 30 days)
+// export async function getMonthlyWorkoutLogs() {
+//   const userId = await getUserId();
 
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+//   const thirtyDaysAgo = new Date();
+//   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-  const logs = await db
-    .select()
-    .from(workoutLogs)
-    .where(eq(workoutLogs.userId, userId))
-    .orderBy(desc(workoutLogs.loggedAt));
+//   const logs = await db
+//     .select()
+//     .from(workoutLogs)
+//     .where(eq(workoutLogs.userId, userId))
+//     .orderBy(desc(workoutLogs.loggedAt));
 
-  // Filter last 30 days in JS (simpler than drizzle and() for now)
-  return logs.filter((log) => new Date(log.loggedAt) >= thirtyDaysAgo);
-}
+//   // Filter last 30 days in JS (simpler than drizzle and() for now)
+//   return logs.filter((log) => new Date(log.loggedAt) >= thirtyDaysAgo);
+// }
 
-// Get User Goal
-export async function getUserGoal() {
-  const userId = await getUserId();
+// // Get User Goal
+// export async function getUserGoal() {
+//   const userId = await getUserId();
 
-  const result = await db
-    .select()
-    .from(goals)
-    .where(eq(goals.userId, userId))
-    .limit(1);
+//   const result = await db
+//     .select()
+//     .from(goals)
+//     .where(eq(goals.userId, userId))
+//     .limit(1);
 
-  return result[0] ?? null;
-}
+//   return result[0] ?? null;
+// }
 
 // Get All Dashboard Data in One Call
 // This is the main function your dashboard page.tsx calls.

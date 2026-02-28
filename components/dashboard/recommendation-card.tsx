@@ -83,7 +83,7 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
                     size="lg"
                 >
                     <Link href="/workout" className="flex items-center justify-center gap-2">
-                        Log This Workout
+                        Log the Workout
                         <ArrowRight className="h-4 w-4" />
                     </Link>
                 </Button>
