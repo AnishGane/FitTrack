@@ -76,6 +76,9 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                     Duration
                                 </TableHead>
                                 <TableHead className="text-xs uppercase tracking-wide text-muted-foreground/60 font-semibold">
+                                    Distance
+                                </TableHead>
+                                <TableHead className="text-xs uppercase tracking-wide text-muted-foreground/60 font-semibold">
                                     Date
                                 </TableHead>
                             </TableRow>
@@ -112,6 +115,9 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                     </TableCell>
                                     <TableCell className="text-muted-foreground font-semibold text-sm">
                                         {log.durationMin ? `${log.durationMin}m` : "—"}
+                                    </TableCell>
+                                    <TableCell className="text-muted-foreground font-semibold text-sm">
+                                        {log.distanceKm ? `${log.distanceKm}Km` : "—"}
                                     </TableCell>
                                     <TableCell className="text-muted-foreground font-semibold text-sm">
                                         {formatDate(log.loggedAt)}

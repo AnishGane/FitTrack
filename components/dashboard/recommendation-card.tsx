@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkoutRecommendation } from "@/lib/algorithms/recommendation";
+import { WorkoutRecommendation } from "@/algorithms/recommendation";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";

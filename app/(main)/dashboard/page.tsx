@@ -4,10 +4,11 @@ import RecommendationCard from "@/components/dashboard/recommendation-card";
 import StreakCard from "@/components/dashboard/streak-card";
 import WorkoutChart from "@/components/dashboard/workout-chart";
 import { ModeToggle } from "@/components/mode-toggle";
-import { calculateStreakAndScore, getWorkoutRecommendation } from "@/lib/algorithms/recommendation";
+import { getWorkoutRecommendation } from "@/algorithms/recommendation";
 import { buildChartData } from "@/lib/helper";
 import { DashboardSkeleton } from "@/skeletons/dashboard-skeleton";
 import { Suspense } from "react";
+import { calculateStreakAndScore } from "@/algorithms/streak-consistency";
 
 async function DashboardContent() {
   const { recentLogs, allLogs, monthlyLogs, goal } = await getDashboardData();

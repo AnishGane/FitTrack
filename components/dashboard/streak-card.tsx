@@ -1,6 +1,6 @@
 "use client";
 
-import { StreakResult } from "@/lib/algorithms/recommendation";
+import { StreakResult } from "@/algorithms/recommendation";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Flame } from "lucide-react";
 
