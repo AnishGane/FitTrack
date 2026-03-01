@@ -4,6 +4,7 @@ import { db } from "@/db/drizzle";
 import { workoutLogs } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { WorkoutLogSchema } from "@/validation/validation";
+import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -13,6 +14,25 @@ export async function getUserId(): Promise<string> {
   });
   if (!session?.user?.id) throw new Error("Not authenticated");
   return session.user.id;
+}
+
+export async function getMonthlyWorkoutLogs() {
+  const userId = await getUserId();
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const logs = await db
+    .select()
+    .from(workoutLogs)
+    .where(eq(workoutLogs.userId, userId))
+    .orderBy(desc(workoutLogs.loggedAt));
+
+  // Filter last 30 days in JS (simpler than drizzle and() for now)
+  const last30DaysLog = logs.filter(
+    (log) => new Date(log.loggedAt) >= thirtyDaysAgo,
+  );
+  return { monthlyLogs: last30DaysLog };
 }
 
 export type ActionResult =

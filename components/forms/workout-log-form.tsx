@@ -15,6 +15,8 @@ import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
 import { logWorkoutAction } from "@/actions/workoutLog.actions";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { CardDescription } from "../ui/card";
 
 const WorkoutLogForm = () => {
     const form = useForm<WorkoutLogFormValue>({
@@ -67,7 +69,7 @@ const WorkoutLogForm = () => {
     }
 
     return (
-        <Card className="w-full sm:max-w-md">
+        <Card className="w-full">
             <CardContent>
                 <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
                     <FieldGroup>
@@ -423,29 +425,38 @@ const WorkoutLogForm = () => {
                             )}
                         />
                     </FieldGroup>
+                    <Field orientation="horizontal" className="justify-between mb-1 mt-6">
+                        <Button type="button" variant="outline" className="py-4.5" onClick={() => form.reset({
+                            exerciseName: "",
+                            muscleGroup: undefined,
+                            difficulty: undefined,
+                            sets: "",
+                            reps: "",
+                            weightKg: "",
+                            durationMin: "",
+                            distanceKm: "",
+                            caloriesBurned: "",
+                            notes: "",
+                            isPersonalBest: false,
+                        })}>
+                            Reset
+                        </Button>
+                        <Button type="submit" disabled={isSubmitting} className="cursor-pointer py-4.5" form="form-rhf-demo">
+                            {isSubmitting ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="animate-spin" />
+                                    Saving
+                                </div>
+                            ) : "Save Workout 💪"}
+                        </Button>
+                    </Field>
                 </form>
             </CardContent>
             <CardFooter>
-                <Field orientation="horizontal" className="justify-between">
-                    <Button type="button" variant="outline" className="py-4.5" onClick={() => form.reset({
-                        exerciseName: "",
-                        muscleGroup: undefined,
-                        difficulty: undefined,
-                        sets: "",
-                        reps: "",
-                        weightKg: "",
-                        durationMin: "",
-                        distanceKm: "",
-                        caloriesBurned: "",
-                        notes: "",
-                        isPersonalBest: false,
-                    })}>
-                        Reset
-                    </Button>
-                    <Button type="submit" disabled={isSubmitting} className="cursor-pointer py-4.5" form="form-rhf-demo">
-                        {isSubmitting ? "Saving..." : "Save Workout 💪"}
-                    </Button>
-                </Field>
+                <CardDescription
+                    className="text-[10px] md:text-sm text-muted-foreground italic text-center">
+                    "Strength does not come from what you can do. It comes from overcoming the things you once thought you couldn't."
+                </CardDescription>
             </CardFooter>
         </Card>
     )
