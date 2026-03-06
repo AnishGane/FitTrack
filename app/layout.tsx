@@ -27,18 +27,18 @@ export default function RootLayout({
       <body
         className={plusJakartaSans.className}
       >
-        <Providers>
-          <TooltipProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-          </TooltipProvider>
-        </Providers>
+        {/* <Providers> */}
+        <TooltipProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </TooltipProvider>
+        {/* </Providers> */}
         <Toaster />
       </body>
     </html>

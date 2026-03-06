@@ -2,30 +2,29 @@
 
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid,
-    Tooltip, Cell,
+    Tooltip, Cell
 } from "recharts";
 import { ChartDataPoint } from "@/lib/helper";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useEffect, useState, useRef } from "react";
+import { CustomTooltip } from "../custom-tooltip";
 
-function useCssVar(variable: string) {
-    const [value, setValue] = useState({ hsl: "#f97316", raw: "" });
+// computed color value — works with oklch, hsl, hex, any format
+function useTailwindColor(className: string) {
+    const [color, setColor] = useState("#f97316");
+
     useEffect(() => {
-        const raw = getComputedStyle(document.documentElement)
-            .getPropertyValue(variable).trim();
-        setValue(raw ? { hsl: `hsl(${raw})`, raw } : { hsl: "#f97316", raw: "" });
-    }, [variable]);
-    return value;
-}
+        const el = document.createElement("div");
+        el.className = className;
+        el.style.display = "none";
+        document.body.appendChild(el);
 
-function CustomTooltip({ active, payload, label }: any) {
-    if (!active || !payload?.length) return null;
-    return (
-        <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-xl text-sm">
-            <p className="text-muted-foreground mb-1">{label}</p>
-            <p className="font-semibold text-foreground">{payload[0].value} min</p>
-        </div>
-    );
+        const computed = getComputedStyle(el).color;
+        setColor(computed || "#f97316");
+        document.body.removeChild(el);
+    }, [className]);
+
+    return color;
 }
 
 interface WorkoutChartProps {
@@ -33,21 +32,17 @@ interface WorkoutChartProps {
 }
 
 const WorkoutChart = ({ data }: WorkoutChartProps) => {
-    const primaryColor = useCssVar("--primary");
-    const mutedColor = useCssVar("--muted-foreground");
-    const borderColor = useCssVar("--border");
+    // Read colors via computed Tailwind classes that resolves oklch correctly
+    const primaryColor = useTailwindColor("text-chart-2");
+    const mutedColor = useTailwindColor("text-muted-foreground");
+    const borderColor = useTailwindColor("text-border");
 
-    // Measure the actual container width
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerWidth, setContainerWidth] = useState(0);
 
     useEffect(() => {
         if (!containerRef.current) return;
-
-        // Set initial width
         setContainerWidth(containerRef.current.offsetWidth);
-
-        // Update on resize (e.g. rotating phone, resizing window)
         const observer = new ResizeObserver((entries) => {
             setContainerWidth(entries[0].contentRect.width);
         });
@@ -60,10 +55,11 @@ const WorkoutChart = ({ data }: WorkoutChartProps) => {
         day: "2-digit",
     });
 
-    // On mobile: each bar gets 45px → chart scrolls
-    // On desktop: use full container width so bars fill the card
     const minChartWidth = data.length * 45;
     const chartWidth = Math.max(minChartWidth, containerWidth);
+
+    // Muted version of primary 
+    const primaryMuted = "oklch(0.6746 0.1414 261.338/ 0.65)";
 
     return (
         <Card className="bg-card border-border sm:rounded-3xl">
@@ -76,10 +72,11 @@ const WorkoutChart = ({ data }: WorkoutChartProps) => {
                         Volume and frequency over time
                     </p>
                 </div>
+                {/* ✅ Legend dot uses inline style with resolved color */}
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span
                         className="inline-block size-3 rounded-full"
-                        style={{ backgroundColor: "orange" }}
+                        style={{ backgroundColor: primaryColor }}
                     />
                     Workout Duration (min)
                 </div>
@@ -92,7 +89,6 @@ const WorkoutChart = ({ data }: WorkoutChartProps) => {
                     </div>
                 ) : (
                     <>
-                        {/* ref measures actual rendered width */}
                         <div ref={containerRef} className="overflow-x-auto pb-2 [-webkit-overflow-scrolling:touch]">
                             <BarChart
                                 width={chartWidth}
@@ -103,18 +99,18 @@ const WorkoutChart = ({ data }: WorkoutChartProps) => {
                             >
                                 <CartesianGrid
                                     vertical={false}
-                                    stroke={borderColor.hsl}
+                                    stroke={borderColor}
                                     strokeDasharray="3 3"
                                     opacity={0.4}
                                 />
                                 <XAxis
                                     dataKey="date"
-                                    tick={{ fontSize: 11, fill: mutedColor.hsl }}
+                                    tick={{ fontSize: 11, fill: mutedColor }}
                                     axisLine={false}
                                     tickLine={false}
                                 />
                                 <YAxis
-                                    tick={{ fontSize: 11, fill: mutedColor.hsl }}
+                                    tick={{ fontSize: 11, fill: mutedColor }}
                                     axisLine={false}
                                     tickLine={false}
                                 />
@@ -128,14 +124,30 @@ const WorkoutChart = ({ data }: WorkoutChartProps) => {
                                         return (
                                             <Cell
                                                 key={entry.date}
-                                                fill={isToday ? primaryColor.hsl : `${primaryColor.hsl}55`}
+                                                fill={isToday ? primaryColor : primaryMuted}
                                             />
                                         );
                                     })}
                                 </Bar>
                             </BarChart>
+                            {/* Legend */}
+                            <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground">
+                                <div className="flex items-center gap-1.5">
+                                    <span
+                                        className="inline-block size-3 rounded-sm"
+                                        style={{ backgroundColor: primaryColor }}
+                                    />
+                                    <span>Today</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <span
+                                        className="inline-block size-3 rounded-sm"
+                                        style={{ backgroundColor: primaryMuted }}
+                                    />
+                                    <span>Other Days</span>
+                                </div>
+                            </div>
                         </div>
-
                         <p className="text-center text-xs text-muted-foreground mt-1 sm:hidden">
                             ← Scroll to see more →
                         </p>

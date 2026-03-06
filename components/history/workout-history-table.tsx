@@ -69,7 +69,7 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
 
             {/* Filter Bar */}
             <Card className="border-border">
-                <CardContent className="flex items-end flex-wrap lg:flex-nowrap gap-4 p-4">
+                <CardContent className="flex items-end flex-wrap lg:flex-nowrap gap-4 md:gap-8 p-4">
                     {/* Muscle Group Select */}
                     <Field className="md:max-w-60">
                         <FieldLabel htmlFor="filter-muscle-group">MUSCLE GROUP</FieldLabel>
