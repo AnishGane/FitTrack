@@ -241,7 +241,7 @@ const WorkoutLogForm = () => {
                                                     placeholder="40"
                                                     autoComplete="off"
                                                     inputMode="numeric"
-                                                    {...{ step: 0.5, min: 20, max: 200 }}
+                                                    {...{ step: 0.5, min: 0, max: 200 }}
                                                 />
                                                 <InputGroupAddon align={"inline-end"}>Kg</InputGroupAddon>
                                             </InputGroup>

@@ -13,24 +13,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { WorkoutLog } from "@/db/schema";
-
-const MUSCLE_COLORS: Record<string, string> = {
-    chest: "bg-orange-500/15 text-orange-400 border-orange-500/30",
-    back: "bg-blue-500/15 text-blue-400 border-blue-500/30",
-    legs: "bg-green-500/15 text-green-400 border-green-500/30",
-    shoulders: "bg-purple-500/15 text-purple-400 border-purple-500/30",
-    arms: "bg-pink-500/15 text-pink-400 border-pink-500/30",
-    core: "bg-yellow-500/15 text-yellow-400 border-yellow-500/30",
-    cardio: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
-    full_body: "bg-red-500/15 text-red-400 border-red-500/30",
-};
-
-function formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-    });
-}
+import { format } from "date-fns";
+import { MUSCLE_COLORS } from "@/constants";
 
 interface RecentActivityTableProps {
     logs: WorkoutLog[];
@@ -120,7 +104,8 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                         {log.distanceKm ? `${log.distanceKm}Km` : "—"}
                                     </TableCell>
                                     <TableCell className="text-muted-foreground font-semibold text-sm">
-                                        {formatDate(log.loggedAt)}
+                                        {/* {formatDate(log.loggedAt)} */}
+                                        {format(log.loggedAt, "MMM dd, yyyy")}
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -28,7 +28,7 @@ export const WorkoutLogSchema = z
     sets: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
       z.coerce
-        .number({ error: "Please enter a valid number" })
+        .number({ invalid_type_error: "Please enter a valid number" })
         .int()
         .min(1, "Min 1")
         .max(100, "Max 100"),
@@ -36,7 +36,7 @@ export const WorkoutLogSchema = z
     reps: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
       z.coerce
-        .number({ error: "Please enter a valid number" })
+        .number({ invalid_type_error: "Please enter a valid number" })
         .int()
         .min(1, "Min 1")
         .max(10000, "Max 10,000"),
@@ -44,14 +44,14 @@ export const WorkoutLogSchema = z
     weightKg: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
       z.coerce
-        .number({ error: "Please enter a valid number" })
+        .number({ invalid_type_error: "Please enter a valid number" })
         .min(0, "Min 0kg")
-        .max(250, "Max 250kg"),
+        .max(200, "Max 200kg"),
     ),
     durationMin: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
       z.coerce
-        .number({ error: "Please enter a valid number" })
+        .number({ invalid_type_error: "Please enter a valid number" })
         .int()
         .min(1, "Min 1 min")
         .max(600, "Max 600 mins"),
@@ -59,7 +59,7 @@ export const WorkoutLogSchema = z
     distanceKm: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
       z.coerce
-        .number({ error: "Please enter a valid number" })
+        .number({ invalid_type_error: "Please enter a valid number" })
         .min(0, "Min 0")
         .max(1000, "Max 1000km")
         .optional(),
@@ -67,7 +67,7 @@ export const WorkoutLogSchema = z
     caloriesBurned: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
       z.coerce
-        .number({ error: "Please enter a valid number" })
+        .number({ invalid_type_error: "Please enter a valid number" })
         .int()
         .min(0, "Min 0")
         .max(10000, "Max 10,000"),
@@ -92,7 +92,7 @@ export const WorkoutLogSchema = z
           path: ["reps"],
           message: "Please enter number of reps",
         });
-      if (!data.weightKg)
+      if (data.weightKg == null)
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["weightKg"],
