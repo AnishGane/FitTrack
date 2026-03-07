@@ -31,8 +31,8 @@ const GoalSetter = ({ initialTarget }: GoalSetterProps) => {
     const hasChanged = selected !== initialTarget;
 
     return (
-        <Card className="bg-card border-border">
-            <CardContent className="px-4 py-2 md:px-6 md:py-4 flex flex-col gap-6">
+        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-3xl">
+            <CardContent className="flex flex-col gap-6">
                 <div>
                     <span className='text-[10px] font-semibold uppercase tracking-widest text-muted-foreground'>Weekly Target</span>
                     <div className='flex items-center gap-2 mt-1 text-primary font-semibold'>
@@ -62,7 +62,7 @@ const GoalSetter = ({ initialTarget }: GoalSetterProps) => {
                             className={cn(
                                 "size-11 rounded-full cursor-pointer text-lg font-semibold border-2 transition-all duration-200",
                                 selected === day
-                                    ? "bg-accent border-accent text-primary-foreground scale-110"
+                                    ? "bg-primary border-primary text-primary-foreground scale-110"
                                     : "bg-transparent border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
                             )}
                         >

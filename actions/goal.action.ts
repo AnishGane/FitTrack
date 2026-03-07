@@ -12,7 +12,6 @@ export type GoalActionResult =
   | { success: false; message: string };
 
 //   Get user's current goal
-
 export async function getUserGoal() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
@@ -114,7 +113,7 @@ export async function getWeekProgress(): Promise<WeekProgressData> {
     thisWeekLogs.map((l) => new Date(l.loggedAt).toISOString().split("T")[0]),
   );
 
-  //    Build 7-day array Mon → Sun
+  // Build 7-day array Mon → Sun
   const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   const weekDays = DAY_LABELS.map((label, i) => {

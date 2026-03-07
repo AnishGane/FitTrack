@@ -11,13 +11,13 @@ function CircularProgress({ value }: { value: number }) {
     const offset = circumference - (value / 100) * circumference;
 
     return (
-        <div className="relative flex items-center justify-center w-28 h-28">
-            <svg className="w-28 h-28 -rotate-90" viewBox="0 0 100 100">
+        <div className="relative flex items-center justify-center w-32 h-32">
+            <svg className="w-32 h-32 -rotate-90" viewBox="0 0 100 100">
                 {/* Track */}
                 <circle
                     cx="50" cy="50" r={radius}
                     fill="none"
-                    stroke="#3A445480"
+                    stroke="#6A706260"
                     strokeWidth="8"
                 />
 
@@ -35,8 +35,8 @@ function CircularProgress({ value }: { value: number }) {
             </svg>
             {/* Center text */}
             <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-xl font-bold text-foreground font-mono">{value}%</span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Weekly</span>
+                <span className="text-2xl font-bold text-foreground font-mono">{value}%</span>
+                <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">Weekly</span>
             </div>
         </div>
     );
@@ -78,14 +78,22 @@ const StreakCard = ({ data }: StreakCardProp) => {
                 {/* Divider */}
                 <div className="border-t border-border" />
 
-                {/* Consistency label */}
-                <p className="text-sm text-muted-foreground">
-                    <span className="font-semibold">Consistency</span>:{" "}
-                    <span className="font-semibold text-foreground">
-                        {totalWorkoutsThisWeek} of {targetDaysPerWeek} days met
-                    </span>{" "}
-                    this week.
-                </p>
+                {totalWorkoutsThisWeek === targetDaysPerWeek ? (
+                    <p className="text-sm text-muted-foreground">Congratulation! You have 100% consistency this week. 🎉</p>
+                ) : (
+                    <>
+                        {/* Consistency label */}
+                        <p className="text-sm text-muted-foreground">
+                            <span className="font-semibold">Consistency</span>:{" "}
+                            <span className="font-semibold text-foreground">
+                                {totalWorkoutsThisWeek} of {targetDaysPerWeek} days met
+                            </span>{" "}
+                            this week.
+                        </p>
+                    </>
+                )}
+
+
             </CardContent>
         </Card>
     )

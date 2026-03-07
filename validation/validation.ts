@@ -31,7 +31,8 @@ export const WorkoutLogSchema = z
         .number({ invalid_type_error: "Please enter a valid number" })
         .int()
         .min(1, "Min 1")
-        .max(100, "Max 100"),
+        .max(100, "Max 100")
+        .optional(),
     ),
     reps: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
@@ -39,14 +40,16 @@ export const WorkoutLogSchema = z
         .number({ invalid_type_error: "Please enter a valid number" })
         .int()
         .min(1, "Min 1")
-        .max(10000, "Max 10,000"),
+        .max(10000, "Max 10,000")
+        .optional(),
     ),
     weightKg: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),
       z.coerce
         .number({ invalid_type_error: "Please enter a valid number" })
         .min(0, "Min 0kg")
-        .max(200, "Max 200kg"),
+        .max(200, "Max 200kg")
+        .optional(),
     ),
     durationMin: z.preprocess(
       (v) => (v === "" || v == null ? undefined : v),

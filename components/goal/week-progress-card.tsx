@@ -31,7 +31,7 @@ function CircularProgress({ done, total }: { done: number; total: number }) {
                 <circle
                     cx="60" cy="60" r={radius}
                     fill="none"
-                    stroke="#03191E"
+                    stroke="#6A706260"
                     strokeWidth="10"
                 />
                 {/* Progress */}
@@ -43,7 +43,7 @@ function CircularProgress({ done, total }: { done: number; total: number }) {
                     strokeLinecap="round"
                     strokeDasharray={circumference}
                     strokeDashoffset={offset}
-                    filter="url(#glow)"
+                    // filter="url(#glow)"
                     className="transition-all duration-700 ease-out"
                 />
             </svg>
