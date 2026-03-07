@@ -1,6 +1,6 @@
 "use client";
 
-import { StreakResult } from "@/algorithms/recommendation";
+import { StreakResult } from "@/algorithms/streak-consistency";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Flame } from "lucide-react";
 
@@ -17,10 +17,11 @@ function CircularProgress({ value }: { value: number }) {
                 <circle
                     cx="50" cy="50" r={radius}
                     fill="none"
-                    stroke="#AEB4A9"
+                    stroke="#3A445480"
                     strokeWidth="8"
                 />
-                {/* Progress */}
+
+                {/* Progress — apply filter here */}
                 <circle
                     cx="50" cy="50" r={radius}
                     fill="none"

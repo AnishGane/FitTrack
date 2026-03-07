@@ -18,7 +18,8 @@ const HistoryPage = () => {
         <div>
             <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold">Workout History</h1>                    <p className="text-sm text-muted-foreground">Review and manage your past training sessions.</p>
+                    <h1 className="text-2xl font-bold">Workout History</h1>
+                    <p className="text-sm text-muted-foreground">Review and manage your past training sessions.</p>
                 </div>
                 <Link href="/workout">
                     <Button className='py-5 w-full cursor-pointer font-semibold'><Plus className="size-4" />Log new workout</Button>
