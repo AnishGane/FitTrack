@@ -21,15 +21,8 @@ async function DashboardContent() {
   return (
     <div className="flex flex-col gap-6 sm:p-6 sm:bg-primary/5 rounded-4xl">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* <div className="cols-span-2"> */}
         <StreakCard data={streakData} />
-        {/* </div> */}
-        {/* <div className="col-span-2"> */}
         <RecommendationCard recommendation={recommendation} />
-        {/* </div> */}
-        {/* <div>
-          Hello
-        </div> */}
       </div>
       <WorkoutChart data={chartData} />
       <RecentActivityTable logs={recentLogs} />

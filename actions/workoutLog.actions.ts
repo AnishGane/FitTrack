@@ -43,7 +43,6 @@ export const logWorkoutAction = async (
   rawValues: unknown,
 ): Promise<ActionResult> => {
   // Validate on server
-
   const parsed = WorkoutLogSchema.safeParse(rawValues);
   if (!parsed.success) {
     const firstError = parsed.error.issues[0]?.message ?? "Invalid form data";

@@ -1,4 +1,3 @@
-// components/goals/WeekProgress.tsx
 import { Card, CardContent } from "@/components/ui/card";
 import { Flame, Info } from "lucide-react";
 import Link from "next/link";
@@ -84,7 +83,7 @@ function DayBubble({
                             ? "border-primary bg-transparent"          // today, no workout yet
                             : isFuture
                                 ? "border-border bg-transparent opacity-40" // future
-                                : "border-border bg-muted/30"               // past, missed
+                                : "border-destructive bg-muted/30"               // past, missed
                 )}
             >
                 {hasWorkout ? (
@@ -92,7 +91,7 @@ function DayBubble({
                         <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 ) : isToday ? (
-                    <span className="w-2 h-2 rounded-full bg-primary" />
+                    <span className="size-2 rounded-full bg-primary" />
                 ) : null}
             </div>
 
@@ -111,55 +110,58 @@ function DayBubble({
     );
 }
 
-// ── Week Progress Card ────────────────────────────────────────────
+//  Week Progress Card
 async function WeekProgressCard() {
     const data = await getWeekProgress();
 
     return (
-        <Card className="bg-card border-border">
-            <CardContent className="p-6 flex flex-col gap-5">
+        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-3xl md:w-fit">
+            <CardContent className=" flex flex-col gap-5">
                 <h2 className="text-base font-semibold text-foreground">
                     This Week&apos;s Progress
                 </h2>
 
                 {/* Ring + Days grid */}
-                <div className="flex flex-col sm:flex-row items-center gap-6">
+                <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-12">
                     <CircularProgress done={data.doneDays} total={data.targetDays} />
 
-                    {/* Days of week */}
-                    <div className="flex items-center justify-between sm:justify-start gap-3 w-full">
-                        {data.weekDays.map((day) => (
-                            <DayBubble
-                                key={day.label}
-                                label={day.label}
-                                isToday={day.isToday}
-                                hasWorkout={day.hasWorkout}
-                                isFuture={day.isFuture}
-                            />
-                        ))}
+                    <div className="flex flex-col gap-4">
+                        {/* Days of week */}
+                        <div className="flex items-center flex-wrap justify-between sm:justify-start gap-3 sm:gap-6 w-full">
+                            {data.weekDays.map((day) => (
+                                <DayBubble
+                                    key={day.label}
+                                    label={day.label}
+                                    isToday={day.isToday}
+                                    hasWorkout={day.hasWorkout}
+                                    isFuture={day.isFuture}
+                                />
+                            ))}
+                        </div>
+                        {/* Info message */}
+                        {data.sessionsNeeded > 0 ? (
+                            <div className="flex items-center gap-2 bg-black/5 backdrop-blur-2xl border border-border rounded-xl px-4 py-3 text-xs sm:text-sm">
+                                <Info className="size-5 text-primary shrink-0" />
+                                <p className="text-muted-foreground">
+                                    You need{" "}
+                                    <span className="font-bold text-foreground">
+                                        {data.sessionsNeeded} more session{data.sessionsNeeded > 1 ? "s" : ""}
+                                    </span>{" "}
+                                    to hit your weekly goal of {data.targetDays} days.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-lg px-4 py-3 text-sm">
+                                <span className="text-lg">🎉</span>
+                                <p className="text-primary font-medium">
+                                    Weekly goal achieved! Amazing work this week.
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Info message */}
-                {data.sessionsNeeded > 0 ? (
-                    <div className="flex items-center gap-2 bg-muted/30 border border-border rounded-lg px-4 py-3 text-sm">
-                        <Info className="size-4 text-muted-foreground shrink-0" />
-                        <p className="text-muted-foreground">
-                            You need{" "}
-                            <span className="font-bold text-foreground">
-                                {data.sessionsNeeded} more session{data.sessionsNeeded > 1 ? "s" : ""}
-                            </span>{" "}
-                            to hit your weekly goal of {data.targetDays} days.
-                        </p>
-                    </div>
-                ) : (
-                    <div className="flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-lg px-4 py-3 text-sm">
-                        <span className="text-lg">🎉</span>
-                        <p className="text-primary font-medium">
-                            Weekly goal achieved! Amazing work this week.
-                        </p>
-                    </div>
-                )}
+
             </CardContent>
         </Card>
     );
@@ -170,8 +172,8 @@ async function StreakBanner() {
     const { streak } = await getStreakData();
 
     return (
-        <Card className="bg-card border-border">
-            <CardContent className="p-5 flex items-center justify-between">
+        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-3xl">
+            <CardContent className=" flex items-start gap-8 sm:items-center flex-col sm:flex-row sm:justify-between">
                 <div className="flex items-center gap-3">
                     <div className="size-10 rounded-full bg-primary/15 flex items-center justify-center">
                         <Flame className="size-5 text-primary" />
@@ -188,7 +190,7 @@ async function StreakBanner() {
 
                 <Link
                     href="/workout"
-                    className="flex items-center gap-1.5 text-primary font-semibold text-sm hover:opacity-80 transition-opacity shrink-0"
+                    className="flex items-center gap-1.5 text-primary w-full sm:w-fit text-center justify-center font-semibold text-base hover:opacity-80 transition-opacity shrink-0"
                 >
                     Log Workout
                     <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -200,5 +202,4 @@ async function StreakBanner() {
     );
 }
 
-// ── Export both ───────────────────────────────────────────────────
 export { WeekProgressCard, StreakBanner };

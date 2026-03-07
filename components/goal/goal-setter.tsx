@@ -4,8 +4,7 @@ import { upsertGoal } from '@/actions/goal.action';
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner';
 import { Card, CardContent } from '../ui/card';
-import { Check, Flame, Target } from 'lucide-react';
-import { Badge } from '../ui/badge';
+import { Target } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 
@@ -83,15 +82,15 @@ const GoalSetter = ({ initialTarget }: GoalSetterProps) => {
                 <Button
                     onClick={handleUpdate}
                     disabled={isPending || !hasChanged}
-                    className="w-full py-6 text-base font-semibold cursor-pointer"
+                    className="w-full py-6 text-base sm:rounded-2xl font-semibold cursor-pointer"
                     size="lg"
                 >
                     {isPending
                         ? "Updating..."
                         : hasChanged
                             ? "Update Goal"
-                            : (<span className="flex items-center">
-                                Goal Set < Check className="ml-2 size-6" />
+                            : (<span>
+                                Goal Set
                             </span>
                             )}
                 </Button>

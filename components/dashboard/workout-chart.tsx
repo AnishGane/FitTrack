@@ -11,7 +11,7 @@ import { CustomTooltip } from "../custom-tooltip";
 
 // computed color value — works with oklch, hsl, hex, any format
 function useTailwindColor(className: string) {
-    const [color, setColor] = useState("#f97316");
+    const [color, setColor] = useState("#111111");
 
     useEffect(() => {
         const el = document.createElement("div");
@@ -20,7 +20,7 @@ function useTailwindColor(className: string) {
         document.body.appendChild(el);
 
         const computed = getComputedStyle(el).color;
-        setColor(computed || "#f97316");
+        setColor(computed || "#111111");
         document.body.removeChild(el);
     }, [className]);
 
