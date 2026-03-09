@@ -3,7 +3,6 @@ import RecentActivityTable from "@/components/dashboard/recent-activity-table";
 import RecommendationCard from "@/components/dashboard/recommendation-card";
 import StreakCard from "@/components/dashboard/streak-card";
 import WorkoutChart from "@/components/dashboard/workout-chart";
-import { ModeToggle } from "@/components/mode-toggle";
 import { getWorkoutRecommendation } from "@/algorithms/recommendation";
 import { buildChartData } from "@/lib/helper";
 import { DashboardSkeleton } from "@/skeletons/dashboard-skeleton";
@@ -35,7 +34,6 @@ export default async function Page() {
     <div>
       <div>
         <h1 className="text-2xl font-medium mb-4 text-foreground">Dashboard</h1>
-        <ModeToggle />
       </div>
 
       <Suspense fallback={<DashboardSkeleton />}>

@@ -26,6 +26,7 @@ import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellI
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useTheme } from "next-themes"
+import { ModeToggle } from "./mode-toggle"
 
 export function NavUser({ image, name, email }: {
   image: string
@@ -88,11 +89,10 @@ export function NavUser({ image, name, email }: {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Link href="/goals" className="flex items-center justify-between gap-1.5">
-                  <Settings
-                  />
-                  Setting
-                </Link>
+                <div className="flex items-center w-full justify-between gap-1.5">
+                  Dark Mode
+                  <ModeToggle />
+                </div>
               </DropdownMenuItem>
 
 
@@ -106,6 +106,6 @@ export function NavUser({ image, name, email }: {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
-    </SidebarMenu>
+    </SidebarMenu >
   )
 }
