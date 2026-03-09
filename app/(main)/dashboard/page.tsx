@@ -54,8 +54,9 @@ const displayUsername = async () => {
   if (!session) {
     return null;
   }
+  const firstName = session.user.name.split(" ")[0];
   return (
-    <p className="sm:mr-4 font-light">{showGreeting()}, <span className="font-semibold! text-lg">{session.user.name}!</span></p>
+    <p className="sm:mr-4 font-light">{showGreeting()}, <span className="font-medium! text-lg">{firstName}!</span></p>
   )
 }
 
