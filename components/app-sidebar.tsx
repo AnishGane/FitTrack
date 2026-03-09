@@ -46,29 +46,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarHeader className="py-4">
         <div className="flex justify-between items-center">
+
+          {/* Collapsed state: show trigger only (no Link wrapper) */}
+          <SidebarTrigger
+            className="
+        hidden
+        group-data-[collapsible=icon]:flex
+        size-9
+        items-center
+        justify-center
+        rounded-md
+        text-foreground
+        cursor-pointer
+        hover:bg-primary/30"
+          />
+
+          {/* Expanded state: show Logo Link + Trigger */}
           <Link href="/"
             className="flex items-center gap-2 font-semibold text-2xl px-2
-        group-data-[collapsible=icon]:justify-center
-        group-data-[collapsible=icon]:px-1.5">
-            {/* COLLAPSED → Show Trigger */}
-            <SidebarTrigger
-              className="
-                hidden
-                group-data-[collapsible=icon]:flex
-                size-9
-                items-center
-                justify-center
-                rounded-md
-                text-foreground
-                cursor-pointer
-                hover:bg-primary/30"
-            />
-            <span className="truncate tracking-tight group-data-[collapsible=icon]:hidden">
+      group-data-[collapsible=icon]:hidden">
+            <span className="truncate tracking-tight">
               FitTrack
             </span>
           </Link>
 
-          {/* Show trigger on right side only when expanded */}
           <SidebarTrigger
             className="
         cursor-pointer

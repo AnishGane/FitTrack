@@ -11,7 +11,7 @@ export function ModeToggle() {
     }, [setTheme, theme]);
     return (
         <Switch
-            checked={theme === "dark"}
+            checked={theme === "dark" || theme === "system"}
             onCheckedChange={toggleTheme}
             className="cursor-pointer"
         />

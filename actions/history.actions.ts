@@ -1,4 +1,5 @@
 "use server";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "@/db/drizzle";
 import { workoutLogs } from "@/db/schema";
@@ -42,11 +43,19 @@ export async function getHistoryStats(): Promise<HistoryStats> {
   });
 
   if (!session?.user?.id) throw new Error("Not authenticated");
+  return getCachedHistoryStats(session.user.id);
+}
+
+async function getCachedHistoryStats(userId: string): Promise<HistoryStats> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("workouts");
+  cacheTag(`user-${userId}`);
 
   const logs = await db
     .select()
     .from(workoutLogs)
-    .where(eq(workoutLogs.userId, session.user.id))
+    .where(eq(workoutLogs.userId, userId))
     .orderBy(desc(workoutLogs.loggedAt));
 
   if (logs.length === 0) {
@@ -168,12 +177,24 @@ export async function getFilteredWorkoutHistory(
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
 
+  return getCachedFilteredWorkoutHistory(session.user.id, filters);
+}
+
+async function getCachedFilteredWorkoutHistory(
+  userId: string,
+  filters: WorkoutHistoryFilters,
+): Promise<WorkoutHistoryResult> {
+  "use cache";
+  cacheLife("seconds"); // shorter — user actively filters
+  cacheTag("workouts");
+  cacheTag(`user-${userId}`);
+
   const { muscleGroup, dateFrom, dateTo, page = 1, limit = 10 } = filters;
 
   const offset = (page - 1) * limit;
 
   //  Build where conditions
-  const conditions = [eq(workoutLogs.userId, session.user.id)];
+  const conditions = [eq(workoutLogs.userId, userId)];
 
   if (muscleGroup && muscleGroup !== "all") {
     conditions.push(eq(workoutLogs.muscleGroup, muscleGroup as any));

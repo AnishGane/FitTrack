@@ -5,7 +5,7 @@ import { workoutLogs } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { WorkoutLogSchema } from "@/validation/validation";
 import { desc, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 
 export async function getUserId(): Promise<string> {
@@ -18,6 +18,13 @@ export async function getUserId(): Promise<string> {
 
 export async function getMonthlyWorkoutLogs() {
   const userId = await getUserId();
+  return getCachedMonthlyWorkoutLogs(userId);
+}
+
+async function getCachedMonthlyWorkoutLogs(userId: string) {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`workouts-${userId}`);
 
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -28,17 +35,18 @@ export async function getMonthlyWorkoutLogs() {
     .where(eq(workoutLogs.userId, userId))
     .orderBy(desc(workoutLogs.loggedAt));
 
-  // Filter last 30 days in JS (simpler than drizzle and() for now)
-  const last30DaysLog = logs.filter(
+  const monthlyLogs = logs.filter(
     (log) => new Date(log.loggedAt) >= thirtyDaysAgo,
   );
-  return { monthlyLogs: last30DaysLog };
+
+  return { monthlyLogs };
 }
 
 export type ActionResult =
   | { success: true; message: string }
   | { success: false; message: string };
 
+// mutation of data so, no use cache here also
 export const logWorkoutAction = async (
   rawValues: unknown,
 ): Promise<ActionResult> => {
@@ -83,10 +91,9 @@ export const logWorkoutAction = async (
     };
   }
 
-  // Revalidate
-  revalidatePath("/dashboard");
-  revalidatePath("/history");
-  revalidatePath("/workout");
+  // revalidateTag replaces all three revalidatePath calls
+  // Busts: dashboard + history + goals + streak — everything tagged "workouts"
+  revalidateTag(`workouts-${userId}`, "max");
 
   return { success: true, message: "Workout logged successfully! 💪" };
 };

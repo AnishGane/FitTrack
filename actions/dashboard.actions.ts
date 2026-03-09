@@ -1,4 +1,5 @@
 "use server";
+import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 
 import { db } from "@/db/drizzle";
 import { goals, workoutLogs } from "@/db/schema";
@@ -33,6 +34,14 @@ export async function getUserGoal() {
 // One round-trip instead of 3 separate fetches.
 export async function getDashboardData() {
   const userId = await getUserId();
+  return getCachedDashboardData(userId);
+}
+
+async function getCachedDashboardData(userId: string) {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("workouts");
+  cacheTag(`user-${userId}`);
 
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);

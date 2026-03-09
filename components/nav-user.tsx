@@ -95,13 +95,11 @@ export function NavUser({ image, name, email }: {
                 </div>
               </DropdownMenuItem>
 
-
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive" onClick={handleLogOut}>
-              <LogOutIcon
-              />
+            <DropdownMenuItem className="font-medium" onClick={handleLogOut}>
               Log out
+              <LogOutIcon className="ml-auto size-5 mr-1.5" />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

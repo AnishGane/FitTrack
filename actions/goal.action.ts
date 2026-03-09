@@ -1,4 +1,5 @@
 "use server";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "@/db/drizzle";
 import { goals, workoutLogs } from "@/db/schema";
@@ -16,16 +17,25 @@ export async function getUserGoal() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
 
+  return getCachedUserGoal(session.user.id);
+}
+
+async function getCachedUserGoal(userId: string) {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("goals");
+  cacheTag(`user-${userId}`);
+
   const result = await db
     .select()
     .from(goals)
-    .where(eq(goals.userId, session.user.id))
+    .where(eq(goals.userId, userId))
     .limit(1);
 
   return result[0] ?? null;
 }
 
-// upsert goal (create or update)
+// upsert goal (create or update), mutation of data so, no use cache here
 export async function upsertGoal(
   targetDaysPerWeek: number,
 ): Promise<GoalActionResult> {
@@ -86,7 +96,25 @@ export async function getWeekProgress(): Promise<WeekProgressData> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
 
-  const goal = await getUserGoal();
+  return getCachedWeekProgress(session.user.id);
+}
+
+async function getCachedWeekProgress(
+  userId: string,
+): Promise<WeekProgressData> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("workouts");
+  cacheTag("goals");
+  cacheTag(`user-${userId}`);
+
+  // Don't call auth/headers() inside a cache scope; use the provided userId.
+  const goalResult = await db
+    .select()
+    .from(goals)
+    .where(eq(goals.userId, userId))
+    .limit(1);
+  const goal = goalResult[0] ?? null;
   const targetDays = goal?.targetValue ?? 3;
 
   //  Get start of current week (Monday)
@@ -103,7 +131,7 @@ export async function getWeekProgress(): Promise<WeekProgressData> {
   const logs = await db
     .select({ loggedAt: workoutLogs.loggedAt })
     .from(workoutLogs)
-    .where(eq(workoutLogs.userId, session.user.id));
+    .where(eq(workoutLogs.userId, userId));
 
   // Filter to this week in JS
   const thisWeekLogs = logs.filter((l) => new Date(l.loggedAt) >= monday);
@@ -149,10 +177,19 @@ export async function getStreakData() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
 
+  return getCachedStreakData(session.user.id);
+}
+
+async function getCachedStreakData(userId: string) {
+  "use cache";
+  cacheLife("hours"); // streak only changes once per day
+  cacheTag("workouts");
+  cacheTag(`user-${userId}`);
+
   const logs = await db
     .select({ loggedAt: workoutLogs.loggedAt })
     .from(workoutLogs)
-    .where(eq(workoutLogs.userId, session.user.id));
+    .where(eq(workoutLogs.userId, userId));
 
   const workoutDates = new Set(
     logs.map((l) => new Date(l.loggedAt).toISOString().split("T")[0]),
