@@ -128,7 +128,6 @@ export function SignupForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="ashleysmith@gmail.com"
                 autoComplete="on"
-                autoFocus={true}
                 className="border border-black/50 placeholder:text-black/50 bg-transparent!"
               />
               {fieldState.invalid && (
@@ -234,7 +233,7 @@ export function SignupForm({
           Or continue with
         </FieldSeparator>
         <Field>
-          <Button variant="outline" type="button" className="py-5 cursor-pointer bg-transparent! text-neutral-800! hover:bg-black/5!" onClick={handleSignUpWithGoogle}>
+          <Button variant="outline" type="button" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-black/50 hover:bg-black/5!" onClick={handleSignUpWithGoogle}>
             <Google />
             Signup with Google
           </Button>

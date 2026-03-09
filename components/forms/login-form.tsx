@@ -145,7 +145,7 @@ export function LoginForm({
           Or continue with
         </FieldSeparator>
         <Field>
-          <Button variant="outline" className="py-5 cursor-pointer bg-transparent! text-neutral-800! hover:bg-black/5!" type="button" onClick={handleLoginWithGoogle}>
+          <Button variant="outline" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-black/50 hover:bg-black/5!" type="button" onClick={handleLoginWithGoogle}>
             <Google />
             Login with Google
           </Button>
