@@ -87,8 +87,8 @@ export function SignupForm({
     <form onSubmit={form.handleSubmit(onSubmit)} id="form-rhf-demo" className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Create your account</h1>
-          <p className="text-muted-foreground text-sm text-balance">
+          <h1 className="text-2xl font-bold text-black">Create your account</h1>
+          <p className="text-black/50 text-sm text-balance">
             Fill in the form below to create your account
           </p>
         </div>
@@ -96,7 +96,7 @@ export function SignupForm({
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className="gap-1">
+            <Field data-invalid={fieldState.invalid} className="gap-1 text-neutral-800">
               <FieldLabel htmlFor="form-rhf-demo-name">
                 Full Name
               </FieldLabel>
@@ -106,7 +106,7 @@ export function SignupForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="Ashley Smith"
                 autoComplete="off"
-                className="border border-black/50"
+                className="border border-black/50 placeholder:text-black/50 bg-transparent!"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -118,7 +118,7 @@ export function SignupForm({
           name="email"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className="gap-1">
+            <Field data-invalid={fieldState.invalid} className="gap-1 text-neutral-800">
               <FieldLabel htmlFor="form-rhf-demo-email">
                 Email
               </FieldLabel>
@@ -129,12 +129,12 @@ export function SignupForm({
                 placeholder="ashleysmith@gmail.com"
                 autoComplete="on"
                 autoFocus={true}
-                className="border border-black/50"
+                className="border border-black/50 placeholder:text-black/50 bg-transparent!"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
-              <FieldDescription className="text-xs">
+              <FieldDescription className="text-xs text-neutral-600! font-medium">
                 We&apos;ll never share your email with anyone else.
               </FieldDescription>
             </Field>
@@ -144,7 +144,7 @@ export function SignupForm({
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className="gap-1">
+            <Field data-invalid={fieldState.invalid} className="gap-1 text-neutral-800">
               <FieldLabel htmlFor="form-rhf-demo-password">
                 Password
               </FieldLabel>
@@ -157,7 +157,7 @@ export function SignupForm({
                   placeholder="••••••"
                   autoComplete="off"
                   type={showPassword.password ? "text" : "password"}
-                  className="border border-black/50"
+                  className="border border-black/50 placeholder:text-black/50 bg-transparent!"
                 />
                 {showPassword.password ? (
                   <EyeIcon onClick={() => setShowPassword({
@@ -174,7 +174,7 @@ export function SignupForm({
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
-              <FieldDescription className="text-xs">
+              <FieldDescription className="text-xs text-neutral-600! font-medium">
                 Your password must be at least 6 characters long.
               </FieldDescription>
             </Field>
@@ -184,7 +184,7 @@ export function SignupForm({
           name="confirmPassword"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className="gap-1">
+            <Field data-invalid={fieldState.invalid} className="gap-1 text-neutral-800">
               <FieldLabel htmlFor="form-rhf-demo-confirmPassword">
                 Confirm Password
               </FieldLabel>
@@ -197,7 +197,7 @@ export function SignupForm({
                   placeholder="••••••"
                   autoComplete="off"
                   type={showPassword.confirmPassword ? "text" : "password"}
-                  className="border border-black/50"
+                  className="border border-black/50 placeholder:text-black/50 bg-transparent!"
                 />
                 {showPassword.confirmPassword ? (
                   <EyeIcon onClick={() => setShowPassword({
@@ -214,14 +214,14 @@ export function SignupForm({
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
-              <FieldDescription className="text-xs">
+              <FieldDescription className="text-xs text-neutral-600! font-medium">
                 Please confirm your password.
               </FieldDescription>
             </Field>
           )}
         />
         <Field>
-          <Button type="submit" disabled={loading} className="py-5 font-semibold">
+          <Button type="submit" disabled={loading} className="py-5 font-semibold cursor-pointer">
             {loading ? (
               <>
                 <Loader2 className="animate-spin" />
@@ -234,11 +234,11 @@ export function SignupForm({
           Or continue with
         </FieldSeparator>
         <Field>
-          <Button variant="outline" type="button" className="py-5 cursor-pointer" onClick={handleSignUpWithGoogle}>
+          <Button variant="outline" type="button" className="py-5 cursor-pointer bg-transparent! text-neutral-800! hover:bg-black/5!" onClick={handleSignUpWithGoogle}>
             <Google />
             Signup with Google
           </Button>
-          <FieldDescription className="px-6 text-center py-2">
+          <FieldDescription className="px-6 text-center text-neutral-500! py-2">
             Already have an account? <Link href="/login">Sign in</Link>
           </FieldDescription>
         </Field>

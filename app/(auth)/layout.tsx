@@ -1,4 +1,4 @@
-import { Salad } from 'lucide-react'
+import { Dumbbell } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -19,11 +19,13 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             <div className="grid min-h-svh lg:grid-cols-2">
                 <div className="flex flex-col gap-4 p-6 md:p-10 z-99">
                     <div className="flex justify-center gap-2 md:justify-start">
-                        <Link href="/" className="flex items-center gap-2 font-semibold">
-                            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-                                <Salad className="size-4" />
+                        <Link href="/" className="flex items-center gap-2">
+                            <div className="bg-primary flex text-white size-7 items-center justify-center rounded-md">
+                                <Dumbbell className="size-5" />
                             </div>
-                            FitTrack
+                            <span className='text-black font-bold text-2xl'>
+                                FitTrack
+                            </span>
                         </Link>
                     </div>
                     <div className="flex flex-1 items-center justify-center">

@@ -73,8 +73,8 @@ export function LoginForm({
     <form onSubmit={form.handleSubmit(onSubmit)} id="form-rhf-demo" className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
-          <p className="text-muted-foreground text-sm text-balance">
+          <h1 className="text-2xl text-black font-bold">Login to your account</h1>
+          <p className="text-black/50 text-sm text-balance">
             Enter your email below to login to your account
           </p>
         </div>
@@ -82,7 +82,7 @@ export function LoginForm({
           name="email"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className="gap-1">
+            <Field data-invalid={fieldState.invalid} className="gap-1 text-neutral-800">
               <FieldLabel htmlFor="form-rhf-demo-email">
                 Email
               </FieldLabel>
@@ -93,7 +93,7 @@ export function LoginForm({
                 placeholder="your email address"
                 autoComplete="on"
                 autoFocus={true}
-                className="border border-black/50 "
+                className="border border-black/50 placeholder:text-black/50 bg-transparent!"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -105,7 +105,7 @@ export function LoginForm({
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className="gap-1">
+            <Field data-invalid={fieldState.invalid} className="gap-1 text-neutral-800">
               <FieldLabel htmlFor="form-rhf-demo-password">
                 Password
               </FieldLabel>
@@ -117,7 +117,7 @@ export function LoginForm({
                   placeholder="••••••"
                   autoComplete="off"
                   type={showPassword ? "text" : "password"}
-                  className="border border-black/50"
+                  className="border border-black/50 placeholder:text-black/50 bg-transparent!"
                 />
                 {showPassword ? (
                   <EyeIcon onClick={() => setShowPassword(false)} className="size-3.5 absolute right-3 top-2.5 cursor-pointer text-black" />
@@ -145,11 +145,11 @@ export function LoginForm({
           Or continue with
         </FieldSeparator>
         <Field>
-          <Button variant="outline" className="py-5 cursor-pointer" type="button" onClick={handleLoginWithGoogle}>
+          <Button variant="outline" className="py-5 cursor-pointer bg-transparent! text-neutral-800! hover:bg-black/5!" type="button" onClick={handleLoginWithGoogle}>
             <Google />
             Login with Google
           </Button>
-          <FieldDescription className="text-center py-2">
+          <FieldDescription className="text-center text-neutral-500! py-2">
             Don&apos;t have an account?{" "}
             <Link href="/signup" className="underline underline-offset-4">
               Sign up
