@@ -8,6 +8,9 @@ import { buildChartData } from "@/lib/helper";
 import { DashboardSkeleton } from "@/skeletons/dashboard-skeleton";
 import { Suspense } from "react";
 import { calculateStreakAndScore } from "@/algorithms/streak-consistency";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { Skeleton } from "@/components/ui/skeleton";
 
 async function DashboardContent() {
   const { recentLogs, allLogs, monthlyLogs, goal } = await getDashboardData();
@@ -32,13 +35,43 @@ async function DashboardContent() {
 export default async function Page() {
   return (
     <div>
-      <div>
-        <h1 className="text-2xl font-medium mb-4 text-foreground">Dashboard</h1>
+      <div className="flex items-center justify-between mb-6 sm:mb-4">
+        <h1 className="text-2xl font-medium text-foreground ">Dashboard</h1>
+        <Suspense fallback={<DisplayUsernameSkeleton />}>
+          <div>{displayUsername()}</div>
+        </Suspense>
       </div>
 
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardContent />
       </Suspense>
     </div>
+  )
+}
+
+const displayUsername = async () => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return null;
+  }
+  return (
+    <p className="sm:mr-4 font-light">{showGreeting()}, <span className="font-semibold! text-lg">{session.user.name}!</span></p>
+  )
+}
+
+function showGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) {
+    return "Good Morning";
+  } else if (hour < 18) {
+    return "Good Afternoon";
+  } else {
+    return "Good Evening";
+  }
+}
+
+const DisplayUsernameSkeleton = () => {
+  return (
+    <Skeleton className="w-40 h-8 sm:mr-4 rounded-md"></Skeleton>
   )
 }
