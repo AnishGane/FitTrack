@@ -24,7 +24,6 @@ async function getCachedUserGoal(userId: string) {
   "use cache";
   cacheLife("minutes");
   cacheTag("goals");
-  cacheTag(`user-${userId}`);
 
   const result = await db
     .select()
@@ -104,9 +103,8 @@ async function getCachedWeekProgress(
 ): Promise<WeekProgressData> {
   "use cache";
   cacheLife("minutes");
-  cacheTag("workouts");
+  cacheTag(`workouts-${userId}`);
   cacheTag("goals");
-  cacheTag(`user-${userId}`);
 
   // Don't call auth/headers() inside a cache scope; use the provided userId.
   const goalResult = await db
@@ -183,8 +181,7 @@ export async function getStreakData() {
 async function getCachedStreakData(userId: string) {
   "use cache";
   cacheLife("hours"); // streak only changes once per day
-  cacheTag("workouts");
-  cacheTag(`user-${userId}`);
+  cacheTag(`workouts-${userId}`);
 
   const logs = await db
     .select({ loggedAt: workoutLogs.loggedAt })

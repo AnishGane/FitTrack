@@ -40,8 +40,7 @@ export async function getDashboardData() {
 async function getCachedDashboardData(userId: string) {
   "use cache";
   cacheLife("minutes");
-  cacheTag("workouts");
-  cacheTag(`user-${userId}`);
+  cacheTag(`workouts-${userId}`);
 
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);

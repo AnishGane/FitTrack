@@ -49,8 +49,7 @@ export async function getHistoryStats(): Promise<HistoryStats> {
 async function getCachedHistoryStats(userId: string): Promise<HistoryStats> {
   "use cache";
   cacheLife("minutes");
-  cacheTag("workouts");
-  cacheTag(`user-${userId}`);
+  cacheTag(`workouts-${userId}`);
 
   const logs = await db
     .select()
@@ -186,8 +185,7 @@ async function getCachedFilteredWorkoutHistory(
 ): Promise<WorkoutHistoryResult> {
   "use cache";
   cacheLife("seconds"); // shorter — user actively filters
-  cacheTag("workouts");
-  cacheTag(`user-${userId}`);
+  cacheTag(`workouts-${userId}`);
 
   const { muscleGroup, dateFrom, dateTo, page = 1, limit = 10 } = filters;
 

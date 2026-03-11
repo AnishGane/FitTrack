@@ -4,8 +4,8 @@ import { db } from "@/db/drizzle";
 import { workoutLogs } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { WorkoutLogSchema } from "@/validation/validation";
-import { desc, eq } from "drizzle-orm";
-import { cacheLife, cacheTag, revalidateTag } from "next/cache";
+import { and, desc, eq } from "drizzle-orm";
+import { cacheLife, cacheTag, revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 
 export async function getUserId(): Promise<string> {
@@ -96,4 +96,33 @@ export const logWorkoutAction = async (
   revalidateTag(`workouts-${userId}`, "max");
 
   return { success: true, message: "Workout logged successfully! 💪" };
+};
+
+// delete is the mutation action, so here no need for use cache.
+export const deleteWorkoutAction = async (workoutId: string) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session?.user?.id) throw new Error("Not authenticated");
+
+  try {
+    await db
+      .delete(workoutLogs)
+      .where(
+        and(
+          eq(workoutLogs.id, workoutId),
+          eq(workoutLogs.userId, session.user.id),
+        ),
+      );
+
+    revalidateTag(`workouts-${session.user.id}`, "max");
+
+    return { success: true, message: "Workout deleted successfully!" };
+  } catch (error) {
+    console.error("[deleteWorkoutAction] DB error:", error);
+    return {
+      success: false,
+      message: "Failed to delete workout. Please try again.",
+    };
+  }
 };

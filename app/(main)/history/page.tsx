@@ -7,8 +7,11 @@ import { HistoryTableSkeleton } from '@/skeletons/history-table-skeleton'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { connection } from 'next/server'
 
 async function HistoryTableSection() {
+    await connection();
+
     const initialData = await getFilteredWorkoutHistory({ page: 1, limit: 10 });
     return <WorkoutHistoryTable initialData={initialData} />;
 }

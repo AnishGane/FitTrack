@@ -17,6 +17,7 @@ import { logWorkoutAction } from "@/actions/workoutLog.actions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { CardDescription } from "../ui/card";
+import { useRouter } from "next/navigation";
 
 const WorkoutLogForm = () => {
     const form = useForm<WorkoutLogFormValue>({
@@ -36,6 +37,7 @@ const WorkoutLogForm = () => {
         },
     });
     const { isSubmitting } = form.formState;
+    const router = useRouter();
 
     // Watch muscleGroup to conditionally show/hide fields
     const selectedMuscleGroup = form.watch("muscleGroup");
@@ -59,6 +61,7 @@ const WorkoutLogForm = () => {
                     notes: "",
                     isPersonalBest: false,
                 });
+                router.refresh();
             } else {
                 toast.error(result.message);
             }

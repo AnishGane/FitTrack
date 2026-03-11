@@ -11,8 +11,11 @@ import { calculateStreakAndScore } from "@/algorithms/streak-consistency";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { Skeleton } from "@/components/ui/skeleton";
+import { connection } from 'next/server';
 
 async function DashboardContent() {
+  await connection();
+
   const { recentLogs, allLogs, monthlyLogs, goal } = await getDashboardData();
 
   const targetDays = goal?.targetValue ?? 3;
@@ -56,7 +59,7 @@ const displayUsername = async () => {
   }
   const firstName = session.user.name.split(" ")[0];
   return (
-    <p className="sm:mr-4 font-light">{showGreeting()}, <span className="font-medium! text-lg">{firstName}!</span></p>
+    <p className="sm:mr-4 text-sm sm:text-base font-light">{showGreeting()}, <span className="font-medium! text-base sm:text-lg">{firstName}!</span></p>
   )
 }
 

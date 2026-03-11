@@ -3,9 +3,12 @@ import { getMonthlyWorkoutLogs } from '@/actions/workoutLog.actions';
 import { calculateStreakAndScore } from '@/algorithms/streak-consistency';
 import WorkoutLogForm from '@/components/forms/workout-log-form'
 import { WorkoutStatsSkeleton } from '@/skeletons/workout-stats-skeleton';
+import { connection } from 'next/server';
 import { Suspense } from 'react';
 
 const WorkoutStats = async () => {
+    await connection(); // tells Next.js this component is dynamic, never statically cached
+
     const { monthlyLogs } = await getMonthlyWorkoutLogs();
     const goal = await getUserGoal();
     const targetDays = goal?.targetValue ?? 3;
