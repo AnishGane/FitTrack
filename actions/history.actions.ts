@@ -176,17 +176,13 @@ export async function getFilteredWorkoutHistory(
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
 
-  return getCachedFilteredWorkoutHistory(session.user.id, filters);
+  return getFilteredWorkoutHistoryForUser(session.user.id, filters);
 }
 
-async function getCachedFilteredWorkoutHistory(
+async function getFilteredWorkoutHistoryForUser(
   userId: string,
   filters: WorkoutHistoryFilters,
 ): Promise<WorkoutHistoryResult> {
-  "use cache";
-  cacheLife("seconds"); // shorter — user actively filters
-  cacheTag(`workouts-${userId}`);
-
   const { muscleGroup, dateFrom, dateTo, page = 1, limit = 10 } = filters;
 
   const offset = (page - 1) * limit;

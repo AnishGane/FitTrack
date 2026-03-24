@@ -64,11 +64,11 @@ const StreakCard = ({ data }: StreakCardProp) => {
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center">
                             <span className="text-5xl">🔥</span>
-                            <p className="text-5xl font-bold font-mono text-primary leading-none">
+                            <p className="text-5xl font-bold font-mono text-primary mt-2 leading-none">
                                 {currentStreak}
                             </p>
                         </div>
-                        <p className="text-xs ml-1 sm:ml-3 text-muted-foreground mt-1">Days active streak</p>
+                        <p className="text-[14px] ml-1 sm:ml-3 text-muted-foreground mt-1">Days active streak</p>
                     </div>
 
                     {/* Circular Progress */}

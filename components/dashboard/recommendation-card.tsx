@@ -31,64 +31,67 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
     const colorClass = MUSCLE_COLORS[muscleGroup] ?? MUSCLE_COLORS.cardio;
 
     return (
-        <Card className="bg-card ring-2 ring-accent flex flex-col sm:p-4 sm:py-5 sm:rounded-3xl">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                    <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
-                        Today&apos;s Recommendation
-                    </CardTitle>
-                    <Badge className="bg-green-500/15 text-green-400 border-green-500/30 text-[10px] uppercase tracking-wide border">
-                        Recommended
-                    </Badge>
-                </div>
-                <Zap className="h-4 w-4 text-yellow-400" />
-            </CardHeader>
+        <div className="p-[2px] rounded-xl sm:rounded-3xl bg-linear-to-r from-blue-500 via-green-400">
 
-            <CardContent className="flex flex-col flex-1 gap-4">
-                {/* Title */}
-                <div>
-                    <h2 className="text-2xl font-bold text-foreground">
-                        Train Today:{" "}
-                        <span className="text-primary uppercase">{formatMuscleGroup(muscleGroup)}</span>
-                    </h2>
-                    <p className="text-xs tracking-wide text-muted-foreground mt-1">
-                        Reason: {reason}
-                    </p>
-                </div>
+            <Card className="bg-card flex flex-col sm:p-4 sm:py-5 sm:rounded-3xl">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                        <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
+                            Today&apos;s Recommendation
+                        </CardTitle>
+                        <Badge className="bg-green-500/15 text-green-400 border-green-500/30 text-[10px] uppercase tracking-wide border">
+                            Recommended
+                        </Badge>
+                    </div>
+                    <Zap className="h-4 w-4 text-yellow-400" />
+                </CardHeader>
 
-                {/* Exercise badges */}
-                <div className="flex flex-col sm:flex-row flex-wrap gap-4 ">
-                    {suggestedExercises.map((ex, idx) => (
-                        <div
-                            key={ex}
-                            className={`rounded-xl border flex items-center gap-3 px-3 sm:min-w-40 py-3 text-xs font-medium ${colorClass}`}
-                        >
-                            <span className="bg-background/50 backdrop-blur-3xl text-lg ring ring-secondary/50 py-[5px] px-4 rounded-full">{idx + 1}</span>
-                            <div>
-                                <p className="text-[10px] uppercase font-light tracking-wider text-muted-foreground mb-0.5">
-                                    Target
-                                </p>
-                                <span className="font-semibold tracking-wide text-sm">
-                                    {ex}
-                                </span>
+                <CardContent className="flex flex-col flex-1 gap-4">
+                    {/* Title */}
+                    <div>
+                        <h2 className="text-2xl font-bold text-foreground">
+                            Train Today:{" "}
+                            <span className="text-primary uppercase">{formatMuscleGroup(muscleGroup)}</span>
+                        </h2>
+                        <p className="text-xs tracking-wide text-muted-foreground mt-1">
+                            Reason: {reason}
+                        </p>
+                    </div>
+
+                    {/* Exercise badges */}
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-4 ">
+                        {suggestedExercises.map((ex, idx) => (
+                            <div
+                                key={ex}
+                                className={`rounded-xl border flex items-center gap-3 px-3 sm:min-w-40 py-3 text-xs font-medium ${colorClass}`}
+                            >
+                                <span className="bg-background/50 backdrop-blur-3xl text-lg ring ring-secondary/50 py-[5px] px-4 rounded-full">{idx + 1}</span>
+                                <div>
+                                    <p className="text-[10px] uppercase font-light tracking-wider text-muted-foreground mb-0.5">
+                                        Target
+                                    </p>
+                                    <span className="font-semibold tracking-wide text-sm">
+                                        {ex}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                {/* CTA */}
-                <Button
-                    asChild
-                    className="w-full rounded-2xl mt-auto bg-primary hover:bg-primary/90 text-primary-foreground py-5 font-semibold"
-                    size="lg"
-                >
-                    <Link href="/workout" className="flex items-center justify-center gap-2">
-                        Log the Workout
-                        <ArrowRight className="h-4 w-4" />
-                    </Link>
-                </Button>
-            </CardContent>
-        </Card>
+                    {/* CTA */}
+                    <Button
+                        asChild
+                        className="w-full rounded-2xl mt-auto bg-primary hover:bg-primary/90 text-primary-foreground py-5 font-semibold"
+                        size="lg"
+                    >
+                        <Link href="/workout" className="flex items-center justify-center gap-2">
+                            Log the Workout
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
     )
 }
 

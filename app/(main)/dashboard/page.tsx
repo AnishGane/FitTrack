@@ -41,7 +41,7 @@ export default async function Page() {
       <div className="flex items-center justify-between mb-6 sm:mb-4">
         <h1 className="text-2xl font-medium text-foreground ">Dashboard</h1>
         <Suspense fallback={<DisplayUsernameSkeleton />}>
-          <div>{displayUsername()}</div>
+          <p className="mr-2 font-light">{showGreeting()} Pal.</p>
         </Suspense>
       </div>
 
@@ -49,17 +49,6 @@ export default async function Page() {
         <DashboardContent />
       </Suspense>
     </div>
-  )
-}
-
-const displayUsername = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) {
-    return null;
-  }
-  const firstName = session.user.name.split(" ")[0];
-  return (
-    <p className="sm:mr-4 text-sm sm:text-base font-light">{showGreeting()}, <span className="font-medium! text-base sm:text-lg">{firstName}!</span></p>
   )
 }
 

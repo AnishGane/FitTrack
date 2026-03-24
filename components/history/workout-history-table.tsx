@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useCallback } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, ListFilter, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarIcon, ListFilter, X, ChevronLeft, ChevronRight, Trash2Icon, Trash, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getFilteredWorkoutHistory, type WorkoutHistoryResult } from "@/actions/history.actions";
 import { DIFFICULTY_COLORS, HISTORY_MUSCLE_GROUPS, MUSCLE_COLORS } from "@/constants";
 import { formatMuscleGroup } from "@/lib/helper";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { deleteWorkoutAction } from "@/actions/common/common.action";
 
 interface WorkoutHistoryTableProps {
     initialData: WorkoutHistoryResult;
@@ -29,6 +33,10 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
     // Result state 
     const [data, setData] = useState<WorkoutHistoryResult>(initialData);
     const [isPending, startTransition] = useTransition();
+    const [isDeletePending, startDeleteTransition] = useTransition();
+
+    const [openDialogId, setOpenDialogId] = useState<string | null>(null);
+    const router = useRouter();
 
     // Fetch with current filters
     const fetchData = useCallback((page: number, mg: string, from?: Date, to?: Date) => {
@@ -43,6 +51,21 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
             setData(result);
         });
     }, []);
+
+    function handleDelete(id: string) {
+        startDeleteTransition(async () => {
+            const response = await deleteWorkoutAction(id);
+            if (response.success) {
+                toast.success(response.message);
+                setOpenDialogId(null);
+                fetchData(1, "all", undefined, undefined);
+                router.refresh();
+            } else {
+                toast.error("Failed to delete workout. Please try again.");
+                setOpenDialogId(null);
+            }
+        });
+    }
 
     // Apply filters (reset to page 1)
     function handleApplyFilters() {
@@ -199,16 +222,17 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-border hover:bg-transparent">
-                                    <TableHead className="text-xs uppercase tracking-widest text-muted-foreground">Exercise</TableHead>
-                                    <TableHead className="text-xs uppercase tracking-widest text-muted-foreground">Muscle Group</TableHead>
-                                    <TableHead className="text-xs uppercase tracking-widest text-muted-foreground">Sets × Reps</TableHead>
-                                    <TableHead className="text-xs uppercase tracking-widest text-muted-foreground">Weight</TableHead>
-                                    <TableHead className="text-xs uppercase tracking-widest text-muted-foreground">Duration</TableHead>
-                                    <TableHead className="text-xs uppercase tracking-widest text-muted-foreground">Difficulty</TableHead>
-                                    <TableHead className="text-xs uppercase tracking-widest text-muted-foreground">Date</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">Exercise</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest text-center font-semibold text-muted-foreground">Muscle Group</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest text-center font-semibold text-muted-foreground">Sets × Reps</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest text-center font-semibold text-muted-foreground">Weight</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest text-center font-semibold text-muted-foreground">Duration</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest text-center font-semibold text-muted-foreground">Difficulty</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest text-center font-semibold text-muted-foreground">Date</TableHead>
+                                    <TableHead className="text-xs uppercase tracking-widest text-center font-semibold text-muted-foreground">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
-                            <TableBody>
+                            <TableBody className="text-center">
                                 {isPending
                                     //  Loading skeletons
                                     ? Array.from({ length: 5 }).map((_, i) => (
@@ -225,7 +249,7 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
                                         const formattedMuscleGroup = formatMuscleGroup(log.muscleGroup);
                                         return (
                                             <TableRow key={log.id} className="border-border hover:bg-muted/20 transition-colors">
-                                                <TableCell className="font-medium text-foreground capitalize">
+                                                <TableCell className="font-medium text-left text-foreground capitalize">
                                                     {log.exerciseName}
                                                     {log.isPersonalBest && (
                                                         <span className="ml-1.5 text-[10px] text-yellow-400 font-semibold">🏆 PR</span>
@@ -250,6 +274,45 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
                                                 </TableCell>
                                                 <TableCell className="text-sm text-muted-foreground">
                                                     {log.loggedAt ? format(new Date(log.loggedAt), "MMM dd, yyyy") : "—"}
+                                                </TableCell>
+                                                <TableCell className="text-sm text-muted-foreground flex items-center justify-center text-center">
+                                                    <AlertDialog
+                                                        open={openDialogId === log.id}
+                                                        onOpenChange={(open) => {
+                                                            if (!isDeletePending) setOpenDialogId(open ? log.id : null);
+                                                        }}>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button onClick={() => setOpenDialogId(log.id)} variant="ghost" className="rounded-sm! text-destructive hover:bg-transparent! cursor-pointer hover:rounded-sm! font-semibold!">
+                                                                <Trash />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle className="font-semibold">Are you absolutely sure?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone. This will permanently this workout log
+                                                                    from our servers.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel variant={"ghost"} disabled={isDeletePending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
+                                                                <Button
+                                                                    onClick={() => handleDelete(log.id)}
+                                                                    disabled={isDeletePending}
+                                                                    className="cursor-pointer p-4.5"
+                                                                >
+                                                                    {isDeletePending ? (
+                                                                        <>
+                                                                            <Loader2 className="size-4 mr-2 animate-spin" />
+                                                                            Deleting...
+                                                                        </>
+                                                                    ) : (
+                                                                        "Continue"
+                                                                    )}
+                                                                </Button>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
                                                 </TableCell>
                                             </TableRow>
                                         )

@@ -17,7 +17,6 @@ import { format } from "date-fns";
 import { MUSCLE_COLORS } from "@/constants";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { MoreHorizontalIcon, Pen, Trash, Loader2 } from "lucide-react";
-import { deleteWorkoutAction } from "@/actions/workoutLog.actions";
 import { toast } from "sonner";
 import {
     AlertDialog,
@@ -31,6 +30,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { deleteWorkoutAction } from "@/actions/common/common.action";
 
 interface RecentActivityTableProps {
     logs: WorkoutLog[];
@@ -172,14 +172,14 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
-                                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                            <AlertDialogTitle className="font-semibold">Are you absolutely sure?</AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 This action cannot be undone. This will permanently this workout log
                                                                 from our servers.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer">Cancel</AlertDialogCancel>
+                                                            <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
                                                             <Button
                                                                 onClick={() => handleDelete(log.id)}
                                                                 disabled={isPending}

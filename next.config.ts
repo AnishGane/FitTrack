@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   allowedDevOrigins: ["192.168.0.106"],
+  images: {
+    domains: ["images.unsplash.com", "plus.unsplash.com"],
+  },
 };
 
 export default nextConfig;
