@@ -72,6 +72,16 @@ export async function upsertGoal(
   }
 
   try {
+    // Prevent setting a goal lower than already-completed sessions this week.
+    const timeZone = await resolveRequestTimeZone();
+    const progress = await getCachedWeekProgress(session.user.id, timeZone);
+    if (targetDaysPerWeek < progress.doneDays) {
+      return {
+        success: false,
+        message: `You already completed ${progress.doneDays} day${progress.doneDays === 1 ? "" : "s"} this week. Goal can't be below ${progress.doneDays}.`,
+      };
+    }
+
     const existing = await getUserGoal();
 
     if (existing) {
@@ -132,7 +142,6 @@ async function getCachedWeekProgress(
   cacheTag(`workouts-${userId}`);
   cacheTag("goals");
 
-  // Don't call auth/headers() inside a cache scope; use the provided userId.
   const goalResult = await db
     .select()
     .from(goals)

@@ -1,14 +1,15 @@
-import { getUserGoal } from '@/actions/goal.action';
+import { getUserGoal, getWeekProgress } from '@/actions/goal.action';
 import { StreakBanner, WeekProgressCard } from '@/components/goal/week-progress-card';
 import GoalSetter from '@/components/goal/goal-setter'
 import { GoalSetterSkeleton, StreakSkeleton, WeekProgressSkeleton } from '@/skeletons/goal-skeleton'
 import { Suspense } from 'react'
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import Image from 'next/image';
 
 async function GoalSetterSection() {
     const goal = await getUserGoal();
-    return <GoalSetter initialTarget={goal?.targetValue ?? 3} />;
+    const week = await getWeekProgress();
+    return <GoalSetter initialTarget={goal?.targetValue ?? 3} doneDays={week.doneDays} />;
 }
 
 const GoalsPage = () => {

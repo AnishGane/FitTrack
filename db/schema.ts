@@ -145,11 +145,6 @@ export const goals = pgTable("goals", {
     .references(() => user.id),
   goalType: goalTypeEnum("goal_type").notNull().default("weekly_workouts"),
   targetValue: integer("target_value").notNull().default(3),
-  // meaning depends on goalType:
-  // weekly_workouts  → 3 = "3 days per week"
-  // weekly_duration  → 120 = "120 minutes per week"
-  // monthly_workouts → 12 = "12 workouts per month"
-  // monthly_duration → 1200 = "1200 minutes per month"
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

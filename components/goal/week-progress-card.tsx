@@ -43,7 +43,6 @@ function CircularProgress({ done, total }: { done: number; total: number }) {
                     strokeLinecap="round"
                     strokeDasharray={circumference}
                     strokeDashoffset={offset}
-                    // filter="url(#glow)"
                     className="transition-all duration-700 ease-out"
                 />
             </svg>
@@ -168,12 +167,11 @@ async function WeekProgressCard() {
     );
 }
 
-// Streak Banner 
 async function StreakBanner() {
     const { streak } = await getStreakData();
 
     return (
-        <Card className="bg-card border-border sm:rounded-3xl sm:py-2.5">
+        <Card className="bg-card border-border sm:rounded-3xl sm:py-2.5 px-3 sm:px-0">
             <CardContent className=" flex items-start gap-8 p-0 sm:mx-2 sm:ml-4 sm:items-center flex-col sm:flex-row sm:justify-between">
                 <div className="flex items-center gap-3">
                     <div className="size-10 rounded-full bg-primary/15 flex items-center justify-center">
@@ -181,7 +179,7 @@ async function StreakBanner() {
                     </div>
                     <div>
                         <p className="font-semibold text-foreground">
-                            You&apos;re on a {streak}-day streak!
+                            You&apos;re on a {streak} - day streak!
                         </p>
                         <p className="text-xs text-muted-foreground mt-0.5">
                             Keep it up, you&apos;re building a great habit.
@@ -189,17 +187,17 @@ async function StreakBanner() {
                     </div>
                 </div>
 
-                <Link
-                    href="/workout"
-                    className="flex items-center gap-1.5 text-primary w-full sm:w-fit text-center justify-center font-semibold text-base hover:opacity-80 transition-opacity shrink-0"
-                >
-                    <Button className="py-6 px-5 rounded-r-2xl ml-2 cursor-pointer font-semibold tracking-wide">
+                <Button className="py-6 px-5 rounded-2xl sm:rounded-r-2xl te sm:ml-2 w-full sm:w-fit cursor-pointer font-semibold tracking-wide">
+                    <Link
+                        href="/workout"
+                        className="flex items-center gap-1.5 justify-center font-semibold text-base hover:opacity-80 transition-opacity shrink-0"
+                    >
                         Log Workout
                         <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
             </CardContent>
         </Card>
     );

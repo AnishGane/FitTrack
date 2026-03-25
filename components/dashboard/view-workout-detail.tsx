@@ -2,6 +2,7 @@ import { WorkoutLog } from '@/db/schema'
 import { Separator } from '../ui/separator'
 import { Badge } from '../ui/badge'
 import { Card, CardContent, CardHeader } from '../ui/card'
+import { Notebook, NotebookIcon } from 'lucide-react'
 
 interface ViewWorkoutDetailProps {
     log: WorkoutLog | null,
@@ -51,7 +52,10 @@ const ViewWorkoutDetail = ({ log }: ViewWorkoutDetailProps) => {
             <p>{log?.isPersonalBest ? "This is your personal best." : "Yet to be your personal best. Keep it up!"}</p>
             <Separator className='mt-2' />
             <Card className='bg-foreground/5'>
-                <CardHeader className='font-semibold text-base'>Your Note: </CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardHeader className='font-semibold text-base'>Your Note: </CardHeader>
+                    <NotebookIcon size={20} />
+                </div>
                 <CardContent className=' mx-4 p-0!'>
                     <p>{log?.notes}</p>
                 </CardContent>
