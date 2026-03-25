@@ -16,7 +16,7 @@ import { WorkoutLog } from "@/db/schema";
 import { format } from "date-fns";
 import { MUSCLE_COLORS } from "@/constants";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { MoreHorizontalIcon, Pen, Trash, Loader2 } from "lucide-react";
+import { MoreHorizontalIcon, Pen, Trash, Loader2, View } from "lucide-react";
 import { toast } from "sonner";
 import {
     AlertDialog,
@@ -32,7 +32,9 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { deleteWorkoutAction } from "@/actions/common/common.action";
 import { formatMuscleGroup } from "@/lib/helper";
-import { EditWorkoutSheet } from "./EditWorkoutSheet";
+import { EditWorkoutSheet } from "./edit-workout-sheet";
+import ViewWorkoutDetail from "./view-workout-detail";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 
 interface RecentActivityTableProps {
     logs: WorkoutLog[];
@@ -43,6 +45,7 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
     const [isPending, startTransition] = useTransition();
     const [openDialogId, setOpenDialogId] = useState<string | null>(null);
     const [editingLog, setEditingLog] = useState<WorkoutLog | null>(null);
+    const [viewLog, setViewLog] = useState<WorkoutLog | null>(null);
     const router = useRouter();
 
     function handleDelete(id: string) {
@@ -169,6 +172,10 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                                             <Pen />
                                                             Edit
                                                         </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => setViewLog(log)} className="gap-2">
+                                                            <View />
+                                                            View Details
+                                                        </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
                                                         <AlertDialog
                                                             open={openDialogId === log.id}
@@ -176,7 +183,7 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                                                 if (!isPending) setOpenDialogId(open ? log.id : null);
                                                             }}>
                                                             <AlertDialogTrigger asChild>
-                                                                <Button onClick={() => setOpenDialogId(log.id)} variant="ghost" className="w-full text-left justify-start rounded-sm! text-destructive hover:bg-destructive/60! hover:text-destructive-foreground! cursor-pointer hover:rounded-sm! font-semibold!">
+                                                                <Button onClick={() => setOpenDialogId(log.id)} variant="ghost" className="w-full text-left justify-start rounded-md! text-destructive hover:bg-destructive/60! hover:text-destructive-foreground! cursor-pointer hover:rounded-md! font-semibold!">
                                                                     <Trash />
                                                                     Delete
                                                                 </Button>
@@ -224,6 +231,31 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                 log={editingLog}
                 onClose={() => setEditingLog(null)}
             />
+
+            {/* Dialog for the workout details */}
+            <Dialog
+                open={!!viewLog}
+                onOpenChange={(open) => {
+                    if (!open) setViewLog(null);
+                }}
+            >
+                <DialogContent className="sm:max-w-xl">
+                    <DialogHeader>
+                        <DialogTitle className="font-semibold text-xl">Workout Details</DialogTitle>
+                        <DialogDescription className="text-xs sm:text-[13px] -mt-1.5">
+                            {viewLog ? `Logged at ${format(viewLog.loggedAt, "MMM dd, yyyy")}` : null}
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {viewLog && <ViewWorkoutDetail log={viewLog} />}
+
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline" className="py-4 cursor-pointer">Close</Button>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     )
 }
