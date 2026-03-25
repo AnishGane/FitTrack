@@ -193,7 +193,7 @@ async function StreakBanner() {
                     href="/workout"
                     className="flex items-center gap-1.5 text-primary w-full sm:w-fit text-center justify-center font-semibold text-base hover:opacity-80 transition-opacity shrink-0"
                 >
-                    <Button className="py-6 px-4 rounded-r-2xl ml-2 cursor-pointer font-semibold tracking-wide">
+                    <Button className="py-6 px-5 rounded-r-2xl ml-2 cursor-pointer font-semibold tracking-wide">
                         Log Workout
                         <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />

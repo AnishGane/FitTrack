@@ -8,8 +8,8 @@ import { buildChartData } from "@/lib/helper";
 import { DashboardSkeleton } from "@/skeletons/dashboard-skeleton";
 import { Suspense } from "react";
 import { calculateStreakAndScore } from "@/algorithms/streak-consistency";
-import { Skeleton } from "@/components/ui/skeleton";
 import { connection } from 'next/server';
+import { format } from "date-fns";
 
 async function DashboardContent() {
   await connection();
@@ -36,12 +36,7 @@ async function DashboardContent() {
 export default async function Page() {
   return (
     <div>
-      <div className="flex items-center justify-between mb-6 sm:mb-4">
-        <h1 className="text-2xl font-medium text-foreground ">Dashboard</h1>
-        <Suspense fallback={<DisplayUsernameSkeleton />}>
-          <p className="mr-2 font-light">{showGreeting()} Pal.</p>
-        </Suspense>
-      </div>
+      <DashboardHeader />
 
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardContent />
@@ -50,19 +45,14 @@ export default async function Page() {
   )
 }
 
-function showGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) {
-    return "Good Morning";
-  } else if (hour < 18) {
-    return "Good Afternoon";
-  } else {
-    return "Good Evening";
-  }
-}
-
-const DisplayUsernameSkeleton = () => {
+const DashboardHeader = async () => {
+  "use cache"
   return (
-    <Skeleton className="w-40 h-8 sm:mr-4 rounded-md"></Skeleton>
+    <div className="flex items-center justify-between mb-6 sm:mb-4">
+      <h1 className="text-2xl font-medium text-foreground">Dashboard</h1>
+      <p className="mr-4 font-light">
+        Happy {format(new Date(), "EEEE")}, Pal
+      </p>
+    </div>
   )
 }

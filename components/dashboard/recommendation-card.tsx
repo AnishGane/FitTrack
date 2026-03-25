@@ -69,11 +69,12 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
                     </div>
 
                     {/* Exercise badges */}
-                    <div className="flex flex-col sm:flex-row flex-wrap gap-4 ">
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                         {suggestedExercises.map((ex, idx) => (
                             <div
                                 onClick={() => handleExerciseClick(ex)}
                                 key={ex}
+                                title="Click here to add to the workout"
                                 className={`rounded-xl border cursor-pointer flex items-center gap-3 px-3 sm:min-w-40 py-3 text-xs font-medium ${colorClass}`}
                             >
                                 <span className="bg-background/50 backdrop-blur-3xl text-lg ring ring-secondary/50 py-[5px] px-4 rounded-full">{idx + 1}</span>
@@ -87,6 +88,7 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
                                 </div>
                             </div>
                         ))}
+
                     </div>
 
                     {/* CTA */}
@@ -96,7 +98,7 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
                         size="lg"
                     >
                         <Link href="/workout" className="flex items-center justify-center gap-2">
-                            Log the Workout
+                            Log new Workout
                             <ArrowRight className="h-4 w-4" />
                         </Link>
                     </Button>

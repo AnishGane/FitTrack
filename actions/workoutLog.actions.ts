@@ -5,13 +5,7 @@ import { workoutLogs } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { WorkoutLogSchema } from "@/validation/validation";
 import { and, desc, eq } from "drizzle-orm";
-import {
-  cacheLife,
-  cacheTag,
-  revalidatePath,
-  revalidateTag,
-  updateTag,
-} from "next/cache";
+import { cacheLife, cacheTag, revalidateTag, updateTag } from "next/cache";
 import { headers } from "next/headers";
 
 export async function getUserId(): Promise<string> {
@@ -103,4 +97,38 @@ export const logWorkoutAction = async (
   revalidateTag(`workouts-${userId}`, "max");
 
   return { success: true, message: "Workout logged successfully! 💪" };
+};
+
+export const updateWorkoutAction = async (
+  id: string,
+  rawValues: unknown,
+): Promise<ActionResult> => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id)
+    return { success: false, message: "Not authenticated" };
+
+  const parsed = WorkoutLogSchema.safeParse(rawValues);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: parsed.error.issues[0]?.message ?? "Invalid data",
+    };
+  }
+
+  try {
+    await db
+      .update(workoutLogs)
+      .set({ ...parsed.data, updatedAt: new Date() })
+      .where(
+        and(
+          eq(workoutLogs.id, id),
+          eq(workoutLogs.userId, session.user.id), // security
+        ),
+      );
+  } catch (error) {
+    return { success: false, message: "Failed to update workout." };
+  }
+
+  revalidateTag(`workouts-${session.user.id}`, "max");
+  return { success: true, message: "Workout updated successfully! ✏️" };
 };

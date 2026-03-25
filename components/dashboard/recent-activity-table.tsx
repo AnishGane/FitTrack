@@ -32,6 +32,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { deleteWorkoutAction } from "@/actions/common/common.action";
 import { formatMuscleGroup } from "@/lib/helper";
+import { EditWorkoutSheet } from "./EditWorkoutSheet";
 
 interface RecentActivityTableProps {
     logs: WorkoutLog[];
@@ -41,6 +42,7 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
 
     const [isPending, startTransition] = useTransition();
     const [openDialogId, setOpenDialogId] = useState<string | null>(null);
+    const [editingLog, setEditingLog] = useState<WorkoutLog | null>(null);
     const router = useRouter();
 
     function handleDelete(id: string) {
@@ -58,159 +60,171 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
     }
 
     return (
-        <Card className="bg-card border-border sm:rounded-3xl">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <div className="flex flex-col">
-                    <CardTitle className="text-base font-semibold text-foreground">
-                        Recent Activity
-                    </CardTitle>
-                    <CardDescription className="text-xs text-muted-foreground tracking-wide">
-                        Your <span className="font-semibold">10</span> most recent workouts
-                    </CardDescription>
-                </div>
-                <Button variant="ghost" asChild className="text-primary text-sm h-auto p-0 hover:bg-transparent hover:text-primary/80">
-                    <Link href="/history">View All</Link>
-                </Button>
-            </CardHeader>
-
-            <CardContent className="p-2 sm:px-4">
-                {logs.length === 0 ? (
-                    <div className="flex items-center justify-center py-12 text-muted-foreground text-sm">
-                        No workouts logged yet.
+        <>
+            <Card className="bg-card border-border sm:rounded-3xl">
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div className="flex flex-col">
+                        <CardTitle className="text-base font-semibold text-foreground">
+                            Recent Activity
+                        </CardTitle>
+                        <CardDescription className="text-xs text-muted-foreground tracking-wide">
+                            Your <span className="font-semibold">10</span> most recent workouts
+                        </CardDescription>
                     </div>
-                ) : (
+                    <Button variant="ghost" asChild className="text-primary text-sm h-auto p-0 hover:bg-transparent hover:text-primary/80">
+                        <Link href="/history">View All</Link>
+                    </Button>
+                </CardHeader>
 
-                    <Table>
-                        <TableHeader>
-                            <TableRow className="border-border bg-background/20">
-                                <TableHead className="text-xs uppercase tracking-wide text-muted-foreground/60 font-semibold">
-                                    Exercise
-                                </TableHead>
-                                <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
-                                    Muscle Group
-                                </TableHead>
-                                <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
-                                    Sets × Reps
-                                </TableHead>
-                                <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
-                                    Duration
-                                </TableHead>
-                                <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
-                                    Distance
-                                </TableHead>
-                                <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
-                                    Date
-                                </TableHead>
-                                <TableHead className="text-xs uppercase tracking-wide text-muted-foreground/60  text-center font-semibold">
-                                    Actions
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody className="text-center">
-                            {logs.map((log, idx) => {
-                                const formattedMuscleGroup = formatMuscleGroup(log.muscleGroup);
-                                return (
-                                    <TableRow
-                                        key={log.id}
-                                        className={`border-border hover:bg-muted/30 transition-colors ${idx % 2 === 0 ? "bg-transparent" : "bg-muted/10"
-                                            }`}
-                                    >
-                                        <TableCell className="text-foreground font-medium text-left">
-                                            {log.exerciseName}
-                                            {log.isPersonalBest && (
-                                                <span title="Personal Best" className="ml-2 text-[10px] text-yellow-400 font-semibold uppercase tracking-wide">
-                                                    🏆 PR
-                                                </span>
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="font-semibold">
-                                            <Badge
-                                                className={`border text-[10px] rounded-lg uppercase font-medium ${MUSCLE_COLORS[log.muscleGroup] ?? MUSCLE_COLORS.cardio
-                                                    }`}
-                                            >
-                                                {formattedMuscleGroup}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground font-semibold text-sm">
-                                            {log.sets && log.reps
-                                                ? `${log.sets}×${log.reps}`
-                                                : log.sets
-                                                    ? `${log.sets} sets`
-                                                    : "—"}
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground font-semibold text-sm">
-                                            {log.durationMin ? `${log.durationMin}m` : "—"}
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground font-semibold text-sm">
-                                            {log.distanceKm ? `${log.distanceKm}Km` : "—"}
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground font-semibold text-sm">
-                                            {/* {formatDate(log.loggedAt)} */}
-                                            {format(log.loggedAt, "MMM dd, yyyy")}
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground font-semibold text-sm text-center">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="size-8 cursor-pointer">
-                                                        <MoreHorizontalIcon />
-                                                        <span className="sr-only">Open table options</span>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem className="gap-2">
-                                                        <Pen />
-                                                        Edit
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <AlertDialog
-                                                        open={openDialogId === log.id}
-                                                        onOpenChange={(open) => {
-                                                            if (!isPending) setOpenDialogId(open ? log.id : null);
-                                                        }}>
-                                                        <AlertDialogTrigger asChild>
-                                                            <Button onClick={() => setOpenDialogId(log.id)} variant="ghost" className="w-full text-left justify-start rounded-sm! text-destructive hover:bg-destructive/60! hover:text-destructive-foreground! cursor-pointer hover:rounded-sm! font-semibold!">
-                                                                <Trash />
-                                                                Delete
-                                                            </Button>
-                                                        </AlertDialogTrigger>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                                <AlertDialogTitle className="font-semibold">Are you absolutely sure?</AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    This action cannot be undone. This will permanently this workout log
-                                                                    from our servers.
-                                                                </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
-                                                                <Button
-                                                                    onClick={() => handleDelete(log.id)}
-                                                                    disabled={isPending}
-                                                                    className="cursor-pointer p-4.5"
-                                                                >
-                                                                    {isPending ? (
-                                                                        <>
-                                                                            <Loader2 className="size-4 mr-2 animate-spin" />
-                                                                            Deleting...
-                                                                        </>
-                                                                    ) : (
-                                                                        "Continue"
-                                                                    )}
+                <CardContent className="p-2 sm:px-4">
+                    {logs.length === 0 ? (
+                        <div className="flex items-center justify-center py-12 text-muted-foreground text-sm">
+                            No workouts logged yet.
+                        </div>
+                    ) : (
+
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="border-border bg-background/20">
+                                    <TableHead className="text-xs uppercase tracking-wide text-muted-foreground/60 font-semibold">
+                                        Exercise
+                                    </TableHead>
+                                    <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
+                                        Muscle Group
+                                    </TableHead>
+                                    <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
+                                        Sets × Reps
+                                    </TableHead>
+                                    <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
+                                        Duration
+                                    </TableHead>
+                                    <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
+                                        Distance
+                                    </TableHead>
+                                    <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
+                                        Logged Date
+                                    </TableHead>
+                                    <TableHead className="text-xs uppercase tracking-wide text-center text-muted-foreground/60 font-semibold">
+                                        Last Modified Date
+                                    </TableHead>
+                                    <TableHead className="text-xs uppercase tracking-wide text-muted-foreground/60  text-center font-semibold">
+                                        Actions
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody className="text-center">
+                                {logs.map((log, idx) => {
+                                    const formattedMuscleGroup = formatMuscleGroup(log.muscleGroup);
+                                    return (
+                                        <TableRow
+                                            key={log.id}
+                                            className={`border-border hover:bg-muted/30 transition-colors ${idx % 2 === 0 ? "bg-transparent" : "bg-muted/10"
+                                                }`}
+                                        >
+                                            <TableCell className="text-foreground font-medium text-left">
+                                                {log.exerciseName}
+                                                {log.isPersonalBest && (
+                                                    <span title="Personal Best" className="ml-2 text-[10px] text-yellow-400 font-semibold uppercase tracking-wide">
+                                                        🏆 PR
+                                                    </span>
+                                                )}
+                                            </TableCell>
+                                            <TableCell className="font-semibold">
+                                                <Badge
+                                                    className={`border text-[10px] rounded-lg uppercase font-medium ${MUSCLE_COLORS[log.muscleGroup] ?? MUSCLE_COLORS.cardio
+                                                        }`}
+                                                >
+                                                    {formattedMuscleGroup}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground font-semibold text-sm">
+                                                {log.sets && log.reps
+                                                    ? `${log.sets}×${log.reps}`
+                                                    : log.sets
+                                                        ? `${log.sets} sets`
+                                                        : "—"}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground font-semibold text-sm">
+                                                {log.durationMin ? `${log.durationMin}m` : "—"}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground font-semibold text-sm">
+                                                {log.distanceKm ? `${log.distanceKm}Km` : "—"}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground font-semibold text-sm">
+                                                {format(log.loggedAt, "MMM dd, yyyy")}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground font-semibold text-sm">
+                                                {format(log.updatedAt, "MMM dd, yyyy")}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground font-semibold text-sm text-center">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" size="icon" className="size-8 cursor-pointer">
+                                                            <MoreHorizontalIcon />
+                                                            <span className="sr-only">Open table options</span>
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem onClick={() => setEditingLog(log)} className="gap-2">
+                                                            <Pen />
+                                                            Edit
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <AlertDialog
+                                                            open={openDialogId === log.id}
+                                                            onOpenChange={(open) => {
+                                                                if (!isPending) setOpenDialogId(open ? log.id : null);
+                                                            }}>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button onClick={() => setOpenDialogId(log.id)} variant="ghost" className="w-full text-left justify-start rounded-sm! text-destructive hover:bg-destructive/60! hover:text-destructive-foreground! cursor-pointer hover:rounded-sm! font-semibold!">
+                                                                    <Trash />
+                                                                    Delete
                                                                 </Button>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
-                )}
-            </CardContent>
-        </Card >
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle className="font-semibold">Are you absolutely sure?</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        This action cannot be undone. This will permanently this workout log
+                                                                        from our servers.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
+                                                                    <Button
+                                                                        onClick={() => handleDelete(log.id)}
+                                                                        disabled={isPending}
+                                                                        className="cursor-pointer p-4.5"
+                                                                    >
+                                                                        {isPending ? (
+                                                                            <>
+                                                                                <Loader2 className="size-4 mr-2 animate-spin" />
+                                                                                Deleting...
+                                                                            </>
+                                                                        ) : (
+                                                                            "Continue"
+                                                                        )}
+                                                                    </Button>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    )}
+                </CardContent>
+            </Card >
+
+            <EditWorkoutSheet
+                log={editingLog}
+                onClose={() => setEditingLog(null)}
+            />
+        </>
     )
 }
 

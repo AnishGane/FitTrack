@@ -13,43 +13,81 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { cn } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
-import { logWorkoutAction } from "@/actions/workoutLog.actions";
+import { logWorkoutAction, updateWorkoutAction } from "@/actions/workoutLog.actions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { CardDescription } from "../ui/card";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useWorkoutPrefillStore } from "@/store/workout-prefill.store";
+import { WorkoutLog } from "@/db/schema";
 
-const WorkoutLogForm = () => {
+interface WorkoutLogFormtProps {
+    initialData?: WorkoutLog //undefined - add mode, defined - edit mode
+    onSuccess?: () => void //called after a succcessful submit
+}
+
+const EMPTY_DEFAULTS: WorkoutLogFormValue = {
+    exerciseName: "",
+    muscleGroup: undefined as any,
+    difficulty: undefined as any,
+    sets: "" as any,
+    reps: "" as any,
+    weightKg: "" as any,
+    durationMin: "" as any,
+    distanceKm: "" as any,
+    caloriesBurned: "" as any,
+    notes: "",
+    isPersonalBest: false,
+};
+
+function toFormValues(data: WorkoutLog): WorkoutLogFormValue {
+    return {
+        exerciseName: data.exerciseName,
+        muscleGroup: data.muscleGroup as any,
+        difficulty: data.difficulty as any,
+        sets: data.sets ?? ("" as any),
+        reps: data.reps ?? ("" as any),
+        weightKg: data.weightKg ?? ("" as any),
+        durationMin: data.durationMin ?? ("" as any),
+        distanceKm: data.distanceKm ?? ("" as any),
+        caloriesBurned: data.caloriesBurned ?? ("" as any),
+        notes: data.notes ?? "",
+        isPersonalBest: data.isPersonalBest ?? false,
+    };
+}
+
+function getFieldError(message?: string) {
+    return message === "Expected number, received nan"
+        ? "Please enter a valid number"
+        : message ?? "";
+}
+
+const WorkoutLogForm = ({ initialData, onSuccess }: WorkoutLogFormtProps) => {
+    const isEditing = !!initialData;
     const { exerciseName, muscleGroup, clearPrefill } = useWorkoutPrefillStore();
 
     const form = useForm<WorkoutLogFormValue>({
         resolver: zodResolver(WorkoutLogSchema),
         mode: "all",
-        defaultValues: {
-            exerciseName: "",
-            muscleGroup: undefined,
-            difficulty: undefined,
-            sets: "",
-            reps: "",
-            weightKg: "",
-            durationMin: "",
-            distanceKm: "",
-            caloriesBurned: "",
-            notes: "",
-            isPersonalBest: false,
-        },
+        defaultValues: initialData ? toFormValues(initialData) : EMPTY_DEFAULTS,
     });
 
+    // Prefill from recommendation (add mode only)
     useEffect(() => {
-        if (exerciseName || muscleGroup) {
+        if (!isEditing && (exerciseName || muscleGroup)) {
             form.setValue("exerciseName", exerciseName, { shouldValidate: true });
             form.setValue("muscleGroup", muscleGroup as any, { shouldValidate: true });
-            clearPrefill(); //  clear after filling so it doesn't persist on next visit
+            clearPrefill();
         }
     }, [exerciseName, muscleGroup]);
 
+    // Reset when switching between different logs in edit mode
+    useEffect(() => {
+        if (initialData) {
+            form.reset(toFormValues(initialData));
+        }
+    }, [initialData?.id]);
 
     const { isSubmitting } = form.formState;
     const router = useRouter();
@@ -60,23 +98,18 @@ const WorkoutLogForm = () => {
 
     async function onSubmit(values: WorkoutLogFormValue) {
         try {
-            const result = await logWorkoutAction(values);
+            const result = isEditing
+                ? await updateWorkoutAction(initialData.id, values)
+                : await logWorkoutAction(values);
+
             if (result.success) {
                 toast.success(result.message);
-                form.reset({
-                    exerciseName: "",
-                    muscleGroup: undefined,
-                    difficulty: undefined,
-                    sets: "",
-                    reps: "",
-                    weightKg: "",
-                    durationMin: "",
-                    distanceKm: "",
-                    caloriesBurned: "",
-                    notes: "",
-                    isPersonalBest: false,
-                });
-                router.refresh();
+                if (isEditing) {
+                    onSuccess?.();
+                } else {
+                    form.reset(EMPTY_DEFAULTS);
+                    router.refresh();
+                }
             } else {
                 toast.error(result.message);
             }
@@ -87,7 +120,7 @@ const WorkoutLogForm = () => {
     }
 
     return (
-        <Card className="w-full">
+        <Card className={cn("w-full", isEditing && "bg-transparent! overflow-y-auto")}>
             <CardContent>
                 <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
                     <FieldGroup>
@@ -106,7 +139,6 @@ const WorkoutLogForm = () => {
                                         aria-invalid={fieldState.invalid}
                                         placeholder="e.g. Bench Press"
                                         autoComplete="off"
-                                        autoFocus
                                     />
                                     {fieldState.invalid && (
                                         <FieldError errors={[fieldState.error]} />
@@ -201,9 +233,7 @@ const WorkoutLogForm = () => {
                                             <FieldError
                                                 errors={[{
                                                     ...fieldState.error,
-                                                    message: fieldState.error?.message === "Expected number, received nan"
-                                                        ? "Please enter a valid number"
-                                                        : fieldState.error?.message ?? "",
+                                                    message: getFieldError(fieldState.error?.message),
                                                 }]}
                                             />
                                         </Field>
@@ -232,9 +262,7 @@ const WorkoutLogForm = () => {
                                             <FieldError
                                                 errors={[{
                                                     ...fieldState.error,
-                                                    message: fieldState.error?.message === "Expected number, received nan"
-                                                        ? "Please enter a valid number"
-                                                        : fieldState.error?.message ?? "",
+                                                    message: getFieldError(fieldState.error?.message),
                                                 }]}
                                             />
                                         </Field>
@@ -266,9 +294,7 @@ const WorkoutLogForm = () => {
                                             <FieldError
                                                 errors={[{
                                                     ...fieldState.error,
-                                                    message: fieldState.error?.message === "Expected number, received nan"
-                                                        ? "Please enter a valid number"
-                                                        : fieldState.error?.message ?? "",
+                                                    message: getFieldError(fieldState.error?.message),
                                                 }]}
                                             />
                                         </Field>
@@ -305,9 +331,7 @@ const WorkoutLogForm = () => {
                                         <FieldError
                                             errors={[{
                                                 ...fieldState.error,
-                                                message: fieldState.error?.message === "Expected number, received nan"
-                                                    ? "Please enter a valid number"
-                                                    : fieldState.error?.message ?? "",
+                                                message: getFieldError(fieldState.error?.message),
                                             }]}
                                         />
                                     </Field>
@@ -341,9 +365,7 @@ const WorkoutLogForm = () => {
                                             <FieldError
                                                 errors={[{
                                                     ...fieldState.error,
-                                                    message: fieldState.error?.message === "Expected number, received nan"
-                                                        ? "Please enter a valid number"
-                                                        : fieldState.error?.message ?? "",
+                                                    message: getFieldError(fieldState.error?.message),
                                                 }]}
                                             />
                                         </Field>
@@ -377,9 +399,7 @@ const WorkoutLogForm = () => {
                                         <FieldError
                                             errors={[{
                                                 ...fieldState.error,
-                                                message: fieldState.error?.message === "Expected number, received nan"
-                                                    ? "Please enter a valid number"
-                                                    : fieldState.error?.message ?? "",
+                                                message: getFieldError(fieldState.error?.message),
                                             }]}
                                         />
                                     </Field>
@@ -418,13 +438,14 @@ const WorkoutLogForm = () => {
                             render={({ field: { onChange, value, ref }, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldContent>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-start gap-2">
                                             <Checkbox
                                                 ref={ref}
                                                 checked={value as boolean ?? false}
                                                 onCheckedChange={onChange}
                                                 id="form-rhf-demo-isPersonalBest"
                                                 aria-invalid={fieldState.invalid}
+                                                className="mt-1"
                                             />
                                             <div>
                                                 <FieldLabel htmlFor="form-rhf-demo-isPersonalBest">
@@ -444,38 +465,34 @@ const WorkoutLogForm = () => {
                         />
                     </FieldGroup>
                     <Field orientation="horizontal" className="justify-between mb-1 mt-6">
-                        <Button type="button" variant="outline" className="py-4.5" onClick={() => form.reset({
-                            exerciseName: "",
-                            muscleGroup: undefined,
-                            difficulty: undefined,
-                            sets: "",
-                            reps: "",
-                            weightKg: "",
-                            durationMin: "",
-                            distanceKm: "",
-                            caloriesBurned: "",
-                            notes: "",
-                            isPersonalBest: false,
-                        })}>
-                            Reset
-                        </Button>
-                        <Button type="submit" disabled={isSubmitting} className="cursor-pointer py-4.5" form="form-rhf-demo">
+                        {!isEditing && (
+                            <Button type="button" variant="outline" className="py-4.5" onClick={() => form.reset(EMPTY_DEFAULTS)}>
+                                Reset
+                            </Button>
+                        )}
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className={cn("cursor-pointer py-4.5", isEditing && "w-full")}
+                            form="form-rhf-demo"
+                        >
                             {isSubmitting ? (
                                 <div className="flex items-center gap-2">
                                     <Loader2 className="animate-spin" />
-                                    Saving
+                                    {isEditing ? "Updating..." : "Saving..."}
                                 </div>
-                            ) : "Save Workout 💪"}
+                            ) : isEditing ? "Update Workout ✏️" : "Save Workout 💪"}
                         </Button>
                     </Field>
                 </form>
             </CardContent>
-            <CardFooter>
-                <CardDescription
-                    className="text-[10px] md:text-sm text-muted-foreground italic text-center">
-                    "Strength does not come from what you can do. It comes from overcoming the things you once thought you couldn't."
-                </CardDescription>
-            </CardFooter>
+            {!isEditing && (
+                <CardFooter>
+                    <CardDescription className="text-[10px] md:text-xs font-semibold text-muted-foreground italic text-center">
+                        "Strength does not come from what you can do. It comes from overcoming the things you once thought you couldn't."
+                    </CardDescription>
+                </CardFooter>
+            )}
         </Card>
     )
 }
