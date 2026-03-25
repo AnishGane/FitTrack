@@ -8,8 +8,6 @@ import { buildChartData } from "@/lib/helper";
 import { DashboardSkeleton } from "@/skeletons/dashboard-skeleton";
 import { Suspense } from "react";
 import { calculateStreakAndScore } from "@/algorithms/streak-consistency";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { connection } from 'next/server';
 

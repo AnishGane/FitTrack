@@ -3,6 +3,7 @@ import { Flame, Info } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getStreakData, getWeekProgress } from "@/actions/goal.action";
+import { Button } from "../ui/button";
 
 //  Circular progress ring
 function CircularProgress({ done, total }: { done: number; total: number }) {
@@ -172,8 +173,8 @@ async function StreakBanner() {
     const { streak } = await getStreakData();
 
     return (
-        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-3xl">
-            <CardContent className=" flex items-start gap-8 sm:items-center flex-col sm:flex-row sm:justify-between">
+        <Card className="bg-card border-border sm:rounded-3xl sm:py-2.5">
+            <CardContent className=" flex items-start gap-8 p-0 sm:mx-2 sm:ml-4 sm:items-center flex-col sm:flex-row sm:justify-between">
                 <div className="flex items-center gap-3">
                     <div className="size-10 rounded-full bg-primary/15 flex items-center justify-center">
                         <Flame className="size-5 text-primary" />
@@ -192,10 +193,12 @@ async function StreakBanner() {
                     href="/workout"
                     className="flex items-center gap-1.5 text-primary w-full sm:w-fit text-center justify-center font-semibold text-base hover:opacity-80 transition-opacity shrink-0"
                 >
-                    Log Workout
-                    <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <Button className="py-6 px-4 rounded-r-2xl ml-2 cursor-pointer font-semibold tracking-wide">
+                        Log Workout
+                        <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </Button>
                 </Link>
             </CardContent>
         </Card>

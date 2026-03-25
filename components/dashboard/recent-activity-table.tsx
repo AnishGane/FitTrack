@@ -31,6 +31,7 @@ import {
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { deleteWorkoutAction } from "@/actions/common/common.action";
+import { formatMuscleGroup } from "@/lib/helper";
 
 interface RecentActivityTableProps {
     logs: WorkoutLog[];
@@ -106,102 +107,105 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                             </TableRow>
                         </TableHeader>
                         <TableBody className="text-center">
-                            {logs.map((log, idx) => (
-                                <TableRow
-                                    key={log.id}
-                                    className={`border-border hover:bg-muted/30 transition-colors ${idx % 2 === 0 ? "bg-transparent" : "bg-muted/10"
-                                        }`}
-                                >
-                                    <TableCell className="text-foreground font-medium text-left">
-                                        {log.exerciseName}
-                                        {log.isPersonalBest && (
-                                            <span title="Personal Best" className="ml-2 text-[10px] text-yellow-400 font-semibold uppercase tracking-wide">
-                                                🏆 PR
-                                            </span>
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="font-semibold">
-                                        <Badge
-                                            className={`border text-[10px] rounded-lg uppercase font-medium ${MUSCLE_COLORS[log.muscleGroup] ?? MUSCLE_COLORS.cardio
-                                                }`}
-                                        >
-                                            {log.muscleGroup}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-muted-foreground font-semibold text-sm">
-                                        {log.sets && log.reps
-                                            ? `${log.sets}×${log.reps}`
-                                            : log.sets
-                                                ? `${log.sets} sets`
-                                                : "—"}
-                                    </TableCell>
-                                    <TableCell className="text-muted-foreground font-semibold text-sm">
-                                        {log.durationMin ? `${log.durationMin}m` : "—"}
-                                    </TableCell>
-                                    <TableCell className="text-muted-foreground font-semibold text-sm">
-                                        {log.distanceKm ? `${log.distanceKm}Km` : "—"}
-                                    </TableCell>
-                                    <TableCell className="text-muted-foreground font-semibold text-sm">
-                                        {/* {formatDate(log.loggedAt)} */}
-                                        {format(log.loggedAt, "MMM dd, yyyy")}
-                                    </TableCell>
-                                    <TableCell className="text-muted-foreground font-semibold text-sm text-center">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="size-8 cursor-pointer">
-                                                    <MoreHorizontalIcon />
-                                                    <span className="sr-only">Open table options</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem className="gap-2">
-                                                    <Pen />
-                                                    Edit
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                <AlertDialog
-                                                    open={openDialogId === log.id}
-                                                    onOpenChange={(open) => {
-                                                        if (!isPending) setOpenDialogId(open ? log.id : null);
-                                                    }}>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button onClick={() => setOpenDialogId(log.id)} variant="ghost" className="w-full text-left justify-start rounded-sm! text-destructive hover:bg-destructive/60! hover:text-destructive-foreground! cursor-pointer hover:rounded-sm! font-semibold!">
-                                                            <Trash />
-                                                            Delete
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle className="font-semibold">Are you absolutely sure?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This will permanently this workout log
-                                                                from our servers.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
-                                                            <Button
-                                                                onClick={() => handleDelete(log.id)}
-                                                                disabled={isPending}
-                                                                className="cursor-pointer p-4.5"
-                                                            >
-                                                                {isPending ? (
-                                                                    <>
-                                                                        <Loader2 className="size-4 mr-2 animate-spin" />
-                                                                        Deleting...
-                                                                    </>
-                                                                ) : (
-                                                                    "Continue"
-                                                                )}
+                            {logs.map((log, idx) => {
+                                const formattedMuscleGroup = formatMuscleGroup(log.muscleGroup);
+                                return (
+                                    <TableRow
+                                        key={log.id}
+                                        className={`border-border hover:bg-muted/30 transition-colors ${idx % 2 === 0 ? "bg-transparent" : "bg-muted/10"
+                                            }`}
+                                    >
+                                        <TableCell className="text-foreground font-medium text-left">
+                                            {log.exerciseName}
+                                            {log.isPersonalBest && (
+                                                <span title="Personal Best" className="ml-2 text-[10px] text-yellow-400 font-semibold uppercase tracking-wide">
+                                                    🏆 PR
+                                                </span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="font-semibold">
+                                            <Badge
+                                                className={`border text-[10px] rounded-lg uppercase font-medium ${MUSCLE_COLORS[log.muscleGroup] ?? MUSCLE_COLORS.cardio
+                                                    }`}
+                                            >
+                                                {formattedMuscleGroup}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground font-semibold text-sm">
+                                            {log.sets && log.reps
+                                                ? `${log.sets}×${log.reps}`
+                                                : log.sets
+                                                    ? `${log.sets} sets`
+                                                    : "—"}
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground font-semibold text-sm">
+                                            {log.durationMin ? `${log.durationMin}m` : "—"}
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground font-semibold text-sm">
+                                            {log.distanceKm ? `${log.distanceKm}Km` : "—"}
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground font-semibold text-sm">
+                                            {/* {formatDate(log.loggedAt)} */}
+                                            {format(log.loggedAt, "MMM dd, yyyy")}
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground font-semibold text-sm text-center">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="size-8 cursor-pointer">
+                                                        <MoreHorizontalIcon />
+                                                        <span className="sr-only">Open table options</span>
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem className="gap-2">
+                                                        <Pen />
+                                                        Edit
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    <AlertDialog
+                                                        open={openDialogId === log.id}
+                                                        onOpenChange={(open) => {
+                                                            if (!isPending) setOpenDialogId(open ? log.id : null);
+                                                        }}>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button onClick={() => setOpenDialogId(log.id)} variant="ghost" className="w-full text-left justify-start rounded-sm! text-destructive hover:bg-destructive/60! hover:text-destructive-foreground! cursor-pointer hover:rounded-sm! font-semibold!">
+                                                                <Trash />
+                                                                Delete
                                                             </Button>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle className="font-semibold">Are you absolutely sure?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone. This will permanently this workout log
+                                                                    from our servers.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
+                                                                <Button
+                                                                    onClick={() => handleDelete(log.id)}
+                                                                    disabled={isPending}
+                                                                    className="cursor-pointer p-4.5"
+                                                                >
+                                                                    {isPending ? (
+                                                                        <>
+                                                                            <Loader2 className="size-4 mr-2 animate-spin" />
+                                                                            Deleting...
+                                                                        </>
+                                                                    ) : (
+                                                                        "Continue"
+                                                                    )}
+                                                                </Button>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })}
                         </TableBody>
                     </Table>
                 )}

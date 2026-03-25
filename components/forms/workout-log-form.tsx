@@ -18,10 +18,15 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { CardDescription } from "../ui/card";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useWorkoutPrefillStore } from "@/store/workout-prefill.store";
 
 const WorkoutLogForm = () => {
+    const { exerciseName, muscleGroup, clearPrefill } = useWorkoutPrefillStore();
+
     const form = useForm<WorkoutLogFormValue>({
         resolver: zodResolver(WorkoutLogSchema),
+        mode: "all",
         defaultValues: {
             exerciseName: "",
             muscleGroup: undefined,
@@ -36,6 +41,16 @@ const WorkoutLogForm = () => {
             isPersonalBest: false,
         },
     });
+
+    useEffect(() => {
+        if (exerciseName || muscleGroup) {
+            form.setValue("exerciseName", exerciseName, { shouldValidate: true });
+            form.setValue("muscleGroup", muscleGroup as any, { shouldValidate: true });
+            clearPrefill(); //  clear after filling so it doesn't persist on next visit
+        }
+    }, [exerciseName, muscleGroup]);
+
+
     const { isSubmitting } = form.formState;
     const router = useRouter();
 
@@ -90,7 +105,7 @@ const WorkoutLogForm = () => {
                                         id="form-rhf-demo-exercisename"
                                         aria-invalid={fieldState.invalid}
                                         placeholder="e.g. Bench Press"
-                                        autoComplete="on"
+                                        autoComplete="off"
                                         autoFocus
                                     />
                                     {fieldState.invalid && (

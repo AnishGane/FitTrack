@@ -48,3 +48,5 @@ export const DIFFICULTY_COLORS: Record<string, string> = {
   intermediate: "text-yellow-500",
   advanced: "text-red-500",
 };
+
+

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Providers from "@/providers";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TimezoneSync } from "@/components/timezone-sync";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
         className={plusJakartaSans.className}
       >
         {/* <Providers> */}
+        <TimezoneSync />
         <TooltipProvider>
           <ThemeProvider
             attribute="class"

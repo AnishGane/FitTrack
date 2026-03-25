@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { ArrowRight, Zap } from "lucide-react";
 import { formatMuscleGroup } from "@/lib/helper";
+import { useRouter } from "next/navigation";
+import { useWorkoutPrefillStore } from "@/store/workout-prefill.store";
 
 
 // Muscle group → badge color mapping (matches your design system)
@@ -29,6 +31,14 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
 
     const { muscleGroup, reason, suggestedExercises } = recommendation;
     const colorClass = MUSCLE_COLORS[muscleGroup] ?? MUSCLE_COLORS.cardio;
+    const setPrefill = useWorkoutPrefillStore((s) => s.setPrefill);
+    const router = useRouter();
+
+
+    function handleExerciseClick(exerciseName: string) {
+        setPrefill(exerciseName, muscleGroup); // set global state
+        router.push("/workout");
+    }
 
     return (
         <div className="p-[2px] rounded-xl sm:rounded-3xl bg-linear-to-r from-blue-500 via-green-400">
@@ -62,8 +72,9 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
                     <div className="flex flex-col sm:flex-row flex-wrap gap-4 ">
                         {suggestedExercises.map((ex, idx) => (
                             <div
+                                onClick={() => handleExerciseClick(ex)}
                                 key={ex}
-                                className={`rounded-xl border flex items-center gap-3 px-3 sm:min-w-40 py-3 text-xs font-medium ${colorClass}`}
+                                className={`rounded-xl border cursor-pointer flex items-center gap-3 px-3 sm:min-w-40 py-3 text-xs font-medium ${colorClass}`}
                             >
                                 <span className="bg-background/50 backdrop-blur-3xl text-lg ring ring-secondary/50 py-[5px] px-4 rounded-full">{idx + 1}</span>
                                 <div>
@@ -81,7 +92,7 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
                     {/* CTA */}
                     <Button
                         asChild
-                        className="w-full rounded-2xl mt-auto bg-primary hover:bg-primary/90 text-primary-foreground py-5 font-semibold"
+                        className="w-full rounded-2xl mt-auto bg-primary hover:bg-primary/90 text-primary-foreground py-5.5 font-semibold"
                         size="lg"
                     >
                         <Link href="/workout" className="flex items-center justify-center gap-2">

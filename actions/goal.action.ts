@@ -6,11 +6,35 @@ import { goals, workoutLogs } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
+
+import {
+  addCalendarDaysToDateKey,
+  getDateKeyInTimeZone,
+  isValidIanaTimeZone,
+  weekdayIndexMondayFirst,
+} from "@/lib/calendar-timezone";
 
 export type GoalActionResult =
   | { success: true; message: string }
   | { success: false; message: string };
+
+async function resolveRequestTimeZone(): Promise<string> {
+  const h = await headers();
+  const vercelTz = h.get("x-vercel-ip-timezone");
+  if (vercelTz && isValidIanaTimeZone(vercelTz)) {
+    return vercelTz;
+  }
+  const c = await cookies();
+  const raw = c.get("fittrack-tz")?.value;
+  if (raw) {
+    const tz = decodeURIComponent(raw);
+    if (isValidIanaTimeZone(tz)) {
+      return tz;
+    }
+  }
+  return "UTC";
+}
 
 //   Get user's current goal
 export async function getUserGoal() {
@@ -95,11 +119,13 @@ export async function getWeekProgress(): Promise<WeekProgressData> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
 
-  return getCachedWeekProgress(session.user.id);
+  const timeZone = await resolveRequestTimeZone();
+  return getCachedWeekProgress(session.user.id, timeZone);
 }
 
 async function getCachedWeekProgress(
   userId: string,
+  timeZone: string,
 ): Promise<WeekProgressData> {
   "use cache";
   cacheLife("minutes");
@@ -115,44 +141,39 @@ async function getCachedWeekProgress(
   const goal = goalResult[0] ?? null;
   const targetDays = goal?.targetValue ?? 3;
 
-  //  Get start of current week (Monday)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon...
-  // Shift so week starts on Monday
-  const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - daysFromMonday);
-
-  //   Fetch all logs from this week
   const logs = await db
     .select({ loggedAt: workoutLogs.loggedAt })
     .from(workoutLogs)
     .where(eq(workoutLogs.userId, userId));
 
-  // Filter to this week in JS
-  const thisWeekLogs = logs.filter((l) => new Date(l.loggedAt) >= monday);
-
-  // Build Set of date strings that have workouts
-  const workedOutDates = new Set(
-    thisWeekLogs.map((l) => new Date(l.loggedAt).toISOString().split("T")[0]),
+  const now = new Date();
+  const todayKey = getDateKeyInTimeZone(now, timeZone);
+  const mondayOffset = weekdayIndexMondayFirst(now, timeZone);
+  const mondayKey = addCalendarDaysToDateKey(todayKey, -mondayOffset);
+  const weekDayKeys = Array.from({ length: 7 }, (_, i) =>
+    addCalendarDaysToDateKey(mondayKey, i),
   );
+  const sundayKey = weekDayKeys[6]!;
+
+  const workedOutDates = new Set<string>();
+  for (const l of logs) {
+    const key = getDateKeyInTimeZone(new Date(l.loggedAt), timeZone);
+    if (key >= mondayKey && key <= sundayKey) {
+      workedOutDates.add(key);
+    }
+  }
 
   // Build 7-day array Mon → Sun
   const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   const weekDays = DAY_LABELS.map((label, i) => {
-    const date = new Date(monday);
-    date.setDate(monday.getDate() + i);
-
-    const dateStr = date.toISOString().split("T")[0];
-    const isToday = dateStr === today.toISOString().split("T")[0];
-    const isFuture = date > today;
+    const dateStr = weekDayKeys[i]!;
+    const isToday = dateStr === todayKey;
+    const isFuture = dateStr > todayKey;
 
     return {
       label,
-      date,
+      date: new Date(`${dateStr}T12:00:00.000Z`),
       isToday,
       hasWorkout: workedOutDates.has(dateStr),
       isFuture,
@@ -175,10 +196,11 @@ export async function getStreakData() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) throw new Error("Not authenticated");
 
-  return getCachedStreakData(session.user.id);
+  const timeZone = await resolveRequestTimeZone();
+  return getCachedStreakData(session.user.id, timeZone);
 }
 
-async function getCachedStreakData(userId: string) {
+async function getCachedStreakData(userId: string, timeZone: string) {
   "use cache";
   cacheLife("hours"); // streak only changes once per day
   cacheTag(`workouts-${userId}`);
@@ -189,22 +211,19 @@ async function getCachedStreakData(userId: string) {
     .where(eq(workoutLogs.userId, userId));
 
   const workoutDates = new Set(
-    logs.map((l) => new Date(l.loggedAt).toISOString().split("T")[0]),
+    logs.map((l) => getDateKeyInTimeZone(new Date(l.loggedAt), timeZone)),
   );
 
   let streak = 0;
-  const today = new Date();
+  let key = getDateKeyInTimeZone(new Date(), timeZone);
 
   for (let i = 0; i < 365; i++) {
-    const check = new Date(today);
-    check.setDate(today.getDate() - i);
-    const dateStr = check.toISOString().split("T")[0];
-
-    if (workoutDates.has(dateStr)) {
+    if (workoutDates.has(key)) {
       streak++;
     } else if (i > 0) {
       break;
     }
+    key = addCalendarDaysToDateKey(key, -1);
   }
 
   return { streak };
