@@ -43,8 +43,6 @@ async function getCachedMonthlyWorkoutLogs(userId: string) {
   return { monthlyLogs };
 }
 
-
-
 // mutation of data so, no use cache here also
 export const logWorkoutAction = async (
   rawValues: unknown,
@@ -130,4 +128,13 @@ export const updateWorkoutAction = async (
 
   revalidateTag(`workouts-${session.user.id}`, "max");
   return { success: true, message: "Workout updated successfully! ✏️" };
+};
+
+export const getWorkoutLogs = async (userId: string) => {
+  const logs = await db
+    .select()
+    .from(workoutLogs)
+    .where(eq(workoutLogs.userId, userId));
+
+  return logs;
 };

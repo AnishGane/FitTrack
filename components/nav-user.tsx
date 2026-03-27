@@ -22,10 +22,11 @@ import {
 } from "@/components/ui/sidebar"
 import { getInitialsFromName } from "@/lib/helper"
 import { signOutUser } from "@/server/users"
-import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react"
+import { ChevronsUpDownIcon, HeartIcon, LogOutIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { ModeToggle } from "./mode-toggle"
+import Link from "next/link"
 
 export function NavUser({ image, name, email }: {
   image: string
@@ -92,6 +93,12 @@ export function NavUser({ image, name, email }: {
                   Dark Mode
                   <ModeToggle />
                 </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/saved-workout" className="flex items-center w-full justify-between gap-1.5">
+                  Saved Workout
+                  <HeartIcon className="size-5 mr-1.5" />
+                </Link>
               </DropdownMenuItem>
 
             </DropdownMenuGroup>

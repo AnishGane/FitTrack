@@ -12,7 +12,7 @@ const ViewWorkoutDetail = ({ log }: ViewWorkoutDetailProps) => {
     return (
         <>
             <h1 className='font-semibold text-lg'>{log?.exerciseName}</h1>
-            <Separator className='-my-2' />
+            <Separator />
             <div className="flex items-center flex-wrap justify-between gap-2">
                 <div className="flex items-center">
                     <span className='font-semibold text-sm'>Calories Burned </span>
@@ -27,7 +27,7 @@ const ViewWorkoutDetail = ({ log }: ViewWorkoutDetailProps) => {
                     <Badge className='ml-2 px-3 bg-rose-500!' >{log?.reps}</Badge>
                 </div>
             </div>
-            <Separator className='mt-2' />
+            <Separator />
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex">
                     <p className='font-semibold text-sm'>Weight — <span className='capitalize font-normal'>{log?.weightKg} (Kg)</span></p>
@@ -39,7 +39,7 @@ const ViewWorkoutDetail = ({ log }: ViewWorkoutDetailProps) => {
                     <p className='font-semibold text-sm'>Distance Covered — <span className='capitalize font-normal'>{log?.distanceKm ?? 0} (Km)</span></p>
                 </div>
             </div>
-            <Separator className='mt-2' />
+            <Separator />
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <div className="flex">
                     <p className='font-semibold text-sm'>Muscle Group — <span className='capitalize font-normal'>{log?.muscleGroup}</span></p>
@@ -50,7 +50,7 @@ const ViewWorkoutDetail = ({ log }: ViewWorkoutDetailProps) => {
                 </div>
             </div>
             <p>{log?.isPersonalBest ? "This is your personal best." : "Yet to be your personal best. Keep it up!"}</p>
-            <Separator className='mt-2' />
+            <Separator />
             <Card className='bg-foreground/5'>
                 <CardHeader className='font-semibold text-base flex justify-between items-center'>Your Note <Shredder className='size-6' /></CardHeader>
 
