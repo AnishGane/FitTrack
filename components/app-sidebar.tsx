@@ -15,30 +15,17 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { NavUser } from "./nav-user"
-import {
-  LayoutDashboard,
-  Dumbbell,
-  Target,
-  History,
-  Salad,
-} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useSidebar } from "@/components/ui/sidebar"
 import { authClient } from "@/lib/auth-client"
-
-const navItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Workout Log", url: "/workout", icon: Dumbbell },
-  { title: "Goals", url: "/goals", icon: Target },
-  { title: "History", url: "/history", icon: History },
-]
+import { navItems } from "@/constants"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
   const { setOpen, isMobile } = useSidebar()
 
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const user = session?.user;
 
   return (
@@ -89,6 +76,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 return (
                   <SidebarMenuItem
                     key={item.title}
+                    // onClick={() => setOpen(isMobile ? false : true)}
                     className="
                       w-full
                       rounded-md

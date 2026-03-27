@@ -9,6 +9,7 @@ import {
   uuid,
   integer,
   real,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -216,8 +217,38 @@ export const personalBests = pgTable("personal_bests", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Saved workouts
+export const savedWorkouts = pgTable("saved_workouts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+
+  name: varchar("name", { length: 100 }).notNull(), // "Push Day A", "Morning Run"
+  description: varchar("description", { length: 300 }), // optional notes about the template
+
+  muscleGroup: varchar("muscle_group", { length: 50 }).notNull(), // same enum as workoutLogs
+  difficulty: varchar("difficulty", { length: 20 }).notNull(), // beginner | intermediate | advanced
+
+  sets: integer("sets"),
+  reps: integer("reps"),
+  weightKg: real("weight_kg"),
+
+  durationMin: integer("duration_min"),
+  distanceKm: real("distance_km"),
+  caloriesBurned: integer("calories_burned"),
+
+  useCount: integer("use_count").default(0).notNull(), // how many times user has used this template
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // TYPESCRIPT TYPES
 // Inferred directly from schema — always stay in sync with DB
+
+// Saved workouts
+export type SavedWorkout = typeof savedWorkouts.$inferSelect;
+export type NewSavedWorkout = typeof savedWorkouts.$inferInsert;
 
 // Workout Logs
 export type WorkoutLog = typeof workoutLogs.$inferSelect;
@@ -272,4 +303,5 @@ export const schema = {
   workoutTemplates,
   templateExercises,
   personalBests,
+  savedWorkouts,
 };

@@ -14,10 +14,7 @@ import {
   isValidIanaTimeZone,
   weekdayIndexMondayFirst,
 } from "@/lib/calendar-timezone";
-
-export type GoalActionResult =
-  | { success: true; message: string }
-  | { success: false; message: string };
+import { ActionResult } from "@/types";
 
 async function resolveRequestTimeZone(): Promise<string> {
   const h = await headers();
@@ -61,7 +58,7 @@ async function getCachedUserGoal(userId: string) {
 // upsert goal (create or update), mutation of data so, no use cache here
 export async function upsertGoal(
   targetDaysPerWeek: number,
-): Promise<GoalActionResult> {
+): Promise<ActionResult> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { success: false, message: "Not authenticated" };

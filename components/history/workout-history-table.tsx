@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useTransition, useCallback } from "react";
+import { useState, useTransition, useCallback, useEffect } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, ListFilter, X, ChevronLeft, ChevronRight, Trash2Icon, Trash, Loader2 } from "lucide-react";
+import { CalendarIcon, ListFilter, X, ChevronLeft, ChevronRight, Trash, Loader2, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,12 +19,16 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescript
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { deleteWorkoutAction } from "@/actions/common/common.action";
+import { useSaveWorkout } from "@/hooks/use-save-workout";
+import { SavedWorkout } from "@/db/schema";
+import { useSavedWorkoutsStore } from "@/store/saved-workouts.store";
 
 interface WorkoutHistoryTableProps {
     initialData: WorkoutHistoryResult;
+    savedWorkouts: SavedWorkout[];
 }
 
-export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
+export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHistoryTableProps) {
     // Filter state
     const [muscleGroup, setMuscleGroup] = useState("all");
     const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
@@ -37,6 +41,20 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
 
     const [openDialogId, setOpenDialogId] = useState<string | null>(null);
     const router = useRouter();
+
+    const { handleSaveWorkout, getStatus } = useSaveWorkout();
+    const { setSaved } = useSavedWorkoutsStore();
+
+    useEffect(() => {
+        for (const log of data.logs) {
+            const match = savedWorkouts.find(
+                (s) => s.name === log.exerciseName && s.muscleGroup === log.muscleGroup
+            );
+            if (match) {
+                setSaved(log.id, match.id);
+            }
+        }
+    }, [data.logs, savedWorkouts]);
 
     // Fetch with current filters
     const fetchData = useCallback((page: number, mg: string, from?: Date, to?: Date) => {
@@ -313,6 +331,18 @@ export function WorkoutHistoryTable({ initialData }: WorkoutHistoryTableProps) {
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     </AlertDialog>
+                                                    <Button onClick={() => handleSaveWorkout(log.id)} variant={"ghost"} className="cursor-pointer">
+                                                        {getStatus(log.id).status === "saving" ? (
+                                                            <Loader2 className="size-4 animate-spin" />
+                                                        ) : getStatus(log.id).status === "saved" ? (
+                                                            <Heart className="size-4 fill-rose-500 stroke-rose-500" />
+                                                        ) :
+                                                            getStatus(log.id).status === "unsaving" ? (<>
+                                                                <Loader2 className="size-4 animate-spin" />
+                                                            </>) : (
+                                                                <Heart className="size-4" />
+                                                            )}
+                                                    </Button>
                                                 </TableCell>
                                             </TableRow>
                                         )

@@ -3,6 +3,7 @@
 import { db } from "@/db/drizzle";
 import { workoutLogs } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { ActionResult } from "@/types";
 import { WorkoutLogSchema } from "@/validation/validation";
 import { and, desc, eq } from "drizzle-orm";
 import { cacheLife, cacheTag, revalidateTag, updateTag } from "next/cache";
@@ -42,9 +43,7 @@ async function getCachedMonthlyWorkoutLogs(userId: string) {
   return { monthlyLogs };
 }
 
-export type ActionResult =
-  | { success: true; message: string }
-  | { success: false; message: string };
+
 
 // mutation of data so, no use cache here also
 export const logWorkoutAction = async (

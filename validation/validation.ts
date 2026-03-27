@@ -113,3 +113,43 @@ export const WorkoutLogSchema = z
   });
 
 export type WorkoutLogFormValue = z.input<typeof WorkoutLogSchema>;
+
+export const SavedWorkoutSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Max 100 characters"),
+  description: z
+    .string()
+    .trim()
+    .max(300, "Max 300 characters")
+    .optional()
+    .nullable(),
+  muscleGroup: z.enum(
+    [
+      "chest",
+      "back",
+      "shoulders",
+      "arms",
+      "cardio",
+      "legs",
+      "core",
+      "full_body",
+    ],
+    {
+      message: "Please select a muscle group",
+    },
+  ),
+  difficulty: z.enum(["beginner", "intermediate", "advanced"], {
+    message: "Please select a difficulty",
+  }),
+  sets: z.number().int().nonnegative().optional().nullable(),
+  reps: z.number().int().nonnegative().optional().nullable(),
+  weightKg: z.number().nonnegative().optional().nullable(),
+  durationMin: z.number().int().nonnegative().optional().nullable(),
+  distanceKm: z.number().nonnegative().optional().nullable(),
+  caloriesBurned: z.number().int().nonnegative().optional().nullable(),
+});
+
+export type SavedWorkoutFormValue = z.infer<typeof SavedWorkoutSchema>;

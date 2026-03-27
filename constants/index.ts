@@ -1,3 +1,5 @@
+import { LayoutDashboard, Dumbbell, Target, History } from "lucide-react";
+
 export const MUSCLE_GROUPS = [
   { value: "chest", label: "Chest", emoji: "💪" },
   { value: "back", label: "Back", emoji: "🔙" },
@@ -49,4 +51,9 @@ export const DIFFICULTY_COLORS: Record<string, string> = {
   advanced: "text-red-500",
 };
 
-
+export const navItems = [
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Workout Log", url: "/workout", icon: Dumbbell },
+  { title: "Goals", url: "/goals", icon: Target },
+  { title: "History", url: "/history", icon: History },
+];

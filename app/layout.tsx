@@ -3,9 +3,9 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Providers from "@/providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TimezoneSync } from "@/components/timezone-sync";
+import Providers from "./providers";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -27,20 +27,21 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={plusJakartaSans.className}
+        suppressHydrationWarning
       >
-        {/* <Providers> */}
-        <TimezoneSync />
-        <TooltipProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </TooltipProvider>
-        {/* </Providers> */}
+        <Providers>
+          <TimezoneSync />
+          <TooltipProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </TooltipProvider>
+        </Providers>
         <Toaster />
       </body>
     </html>

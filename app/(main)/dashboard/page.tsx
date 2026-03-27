@@ -8,13 +8,12 @@ import { buildChartData } from "@/lib/helper";
 import { DashboardSkeleton } from "@/skeletons/dashboard-skeleton";
 import { Suspense } from "react";
 import { calculateStreakAndScore } from "@/algorithms/streak-consistency";
-import { connection } from 'next/server';
-import { format } from "date-fns";
+import { getSavedWorkouts } from "@/actions/common/common.action";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 
 async function DashboardContent() {
-  await connection();
-
   const { recentLogs, allLogs, monthlyLogs, goal } = await getDashboardData();
+  const savedWorkoutsList = await getSavedWorkouts();
 
   const targetDays = goal?.targetValue ?? 3;
   const streakData = calculateStreakAndScore(allLogs, targetDays);
@@ -28,7 +27,7 @@ async function DashboardContent() {
         <RecommendationCard recommendation={recommendation} />
       </div>
       <WorkoutChart data={chartData} />
-      <RecentActivityTable logs={recentLogs} />
+      <RecentActivityTable logs={recentLogs} savedWorkouts={savedWorkoutsList} />
     </div>
   );
 }
@@ -36,23 +35,13 @@ async function DashboardContent() {
 export default async function Page() {
   return (
     <div>
-      <DashboardHeader />
+      <Suspense fallback={null}>
+        <DashboardHeader />
+      </Suspense>
 
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardContent />
       </Suspense>
-    </div>
-  )
-}
-
-const DashboardHeader = async () => {
-  "use cache"
-  return (
-    <div className="flex items-center justify-between mb-6 sm:mb-4">
-      <h1 className="text-2xl font-medium text-foreground">Dashboard</h1>
-      <p className="mr-4 font-light">
-        Happy {format(new Date(), "EEEE")}, Pal
-      </p>
     </div>
   )
 }

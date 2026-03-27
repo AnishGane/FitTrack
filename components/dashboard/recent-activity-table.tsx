@@ -12,11 +12,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { WorkoutLog } from "@/db/schema";
+import { SavedWorkout, WorkoutLog } from "@/db/schema";
 import { format } from "date-fns";
 import { MUSCLE_COLORS } from "@/constants";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { MoreHorizontalIcon, Pen, Trash, Loader2, View } from "lucide-react";
+import { MoreHorizontalIcon, Pen, Trash, Loader2, View, Heart } from "lucide-react";
 import { toast } from "sonner";
 import {
     AlertDialog,
@@ -28,33 +28,48 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 import { deleteWorkoutAction } from "@/actions/common/common.action";
 import { formatMuscleGroup } from "@/lib/helper";
 import { EditWorkoutSheet } from "./edit-workout-sheet";
 import ViewWorkoutDetail from "./view-workout-detail";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { useSaveWorkout } from "@/hooks/use-save-workout";
+import { useSavedWorkoutsStore } from "@/store/saved-workouts.store";
 
 interface RecentActivityTableProps {
     logs: WorkoutLog[];
+    savedWorkouts: SavedWorkout[];
 }
 
-const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
+const RecentActivityTable = ({ logs, savedWorkouts }: RecentActivityTableProps) => {
 
     const [isPending, startTransition] = useTransition();
     const [openDialogId, setOpenDialogId] = useState<string | null>(null);
     const [editingLog, setEditingLog] = useState<WorkoutLog | null>(null);
     const [viewLog, setViewLog] = useState<WorkoutLog | null>(null);
-    const router = useRouter();
 
-    function handleDelete(id: string) {
+    const { handleSaveWorkout, getStatus } = useSaveWorkout();
+    const { setSaved } = useSavedWorkoutsStore();
+
+    useEffect(() => {
+        for (const log of logs) {
+            // Match log to saved workout by exerciseName + muscleGroup
+            const match = savedWorkouts.find(
+                (s) => s.name === log.exerciseName && s.muscleGroup === log.muscleGroup
+            );
+            if (match) {
+                setSaved(log.id, match.id); // pre-populate store
+            }
+        }
+    }, [logs, savedWorkouts, setSaved]);
+
+    function handleDeleteWrokoutLog(id: string) {
         startTransition(async () => {
             const response = await deleteWorkoutAction(id);
             if (response.success) {
                 toast.success(response.message);
                 setOpenDialogId(null);
-                router.refresh();
             } else {
                 toast.error("Failed to delete workout. Please try again.");
                 setOpenDialogId(null);
@@ -176,6 +191,23 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                                             <View />
                                                             View Details
                                                         </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onSelect={(e) => e.preventDefault()}
+                                                            onClick={() => handleSaveWorkout(log.id)}
+                                                            disabled={getStatus(log.id).status === "saving"}
+                                                            className="gap-2 cursor-pointer"
+                                                        >
+                                                            {getStatus(log.id).status === "saving" ? (
+                                                                <><Loader2 className="size-4 animate-spin" /> Saving...</>
+                                                            ) : getStatus(log.id).status === "saved" ? (
+                                                                <><Heart className="size-4 fill-rose-500 stroke-rose-500" /> Saved</>
+                                                            ) :
+                                                                getStatus(log.id).status === "unsaving" ? (<>
+                                                                    <><Loader2 className="size-4 animate-spin" /> Unsaving...</>
+                                                                </>) : (
+                                                                    <><Heart className="size-4" /> Save</>
+                                                                )}
+                                                        </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
                                                         <AlertDialog
                                                             open={openDialogId === log.id}
@@ -199,7 +231,7 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
                                                                 <AlertDialogFooter>
                                                                     <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
                                                                     <Button
-                                                                        onClick={() => handleDelete(log.id)}
+                                                                        onClick={() => handleDeleteWrokoutLog(log.id)}
                                                                         disabled={isPending}
                                                                         className="cursor-pointer p-4.5"
                                                                     >
@@ -251,7 +283,7 @@ const RecentActivityTable = ({ logs }: RecentActivityTableProps) => {
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline" className="py-4 cursor-pointer">Close</Button>
+                            <Button variant="outline" className="py-5.5 sm:py-4 cursor-pointer">Close</Button>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>

@@ -8,12 +8,14 @@ import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { connection } from 'next/server'
+import { getSavedWorkouts } from '@/actions/common/common.action'
 
 async function HistoryTableSection() {
     await connection();
 
     const initialData = await getFilteredWorkoutHistory({ page: 1, limit: 10 });
-    return <WorkoutHistoryTable initialData={initialData} />;
+    const savedWorkoutList = await getSavedWorkouts();
+    return <WorkoutHistoryTable initialData={initialData} savedWorkouts={savedWorkoutList} />;
 }
 
 const HistoryPage = () => {

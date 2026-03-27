@@ -4,19 +4,19 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
 
-export default async function SignupPage() {
-  async function SignupGuard() {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    })
+async function SignupGuard() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
 
-    if (session) {
-      redirect("/dashboard")
-    }
-
-    return <SignupForm />
+  if (session) {
+    redirect("/dashboard")
   }
 
+  return <SignupForm />
+}
+
+export default async function SignupPage() {
   return (
     <Suspense fallback={null}>
       <SignupGuard />

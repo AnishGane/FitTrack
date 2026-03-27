@@ -1,18 +1,18 @@
 "use server";
-import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 
 import { db } from "@/db/drizzle";
 import { goals, workoutLogs } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 // Auth Helper
 export async function getUserId(): Promise<string> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user?.id) throw new Error("Not authenticated");
+  if (!session?.user?.id) redirect("/login");
   return session.user.id;
 }
 
@@ -34,14 +34,10 @@ export async function getUserGoal() {
 // One round-trip instead of 3 separate fetches.
 export async function getDashboardData() {
   const userId = await getUserId();
-  return getCachedDashboardData(userId);
+  return getDashboardDataForUser(userId);
 }
 
-async function getCachedDashboardData(userId: string) {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag(`workouts-${userId}`);
-
+async function getDashboardDataForUser(userId: string) {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 

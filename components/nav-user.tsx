@@ -22,9 +22,8 @@ import {
 } from "@/components/ui/sidebar"
 import { getInitialsFromName } from "@/lib/helper"
 import { signOutUser } from "@/server/users"
-import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon, Settings } from "lucide-react"
+import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { useTheme } from "next-themes"
 import { ModeToggle } from "./mode-toggle"
 
@@ -88,7 +87,7 @@ export function NavUser({ image, name, email }: {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <div className="flex items-center w-full justify-between gap-1.5">
                   Dark Mode
                   <ModeToggle />
