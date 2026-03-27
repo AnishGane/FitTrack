@@ -33,7 +33,7 @@ export function NavUser({ image, name, email }: {
   name: string
   email: string
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useSidebar()
   const router = useRouter();
   const initials = getInitialsFromName(name);
   const { setTheme } = useTheme();
@@ -95,7 +95,7 @@ export function NavUser({ image, name, email }: {
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href="/saved-workout" className="flex items-center w-full justify-between gap-1.5">
+                <Link href="/saved-workout" onClick={() => setOpenMobile(false)} className="flex items-center w-full justify-between gap-1.5">
                   Saved Workout
                   <HeartIcon className="size-5 mr-1.5" />
                 </Link>

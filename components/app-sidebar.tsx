@@ -23,7 +23,7 @@ import { navItems } from "@/constants"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const { setOpen, isMobile } = useSidebar()
+  const { setOpenMobile, isMobile } = useSidebar()
 
   const { data: session } = authClient.useSession();
   const user = session?.user;
@@ -76,7 +76,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 return (
                   <SidebarMenuItem
                     key={item.title}
-                    // onClick={() => setOpen(isMobile ? false : true)}
+
                     className="
                       w-full
                       rounded-md
@@ -114,11 +114,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     >
                       <Link
                         href={item.url}
-                        onClick={() => {
-                          if (isMobile) {
-                            setOpen(false)
-                          }
-                        }}
+                        onClick={() => setOpenMobile(false)}
                         className="
                           flex items-center gap-2 py-2.5 w-full h-full px-3
 

@@ -28,9 +28,9 @@ const DisplaySavedWorkout = ({ savedWorkouts, logs }: DisplaySavedWorkoutProps) 
         <div className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {savedWorkouts.length === 0 && (
-                    <div className="col-span-4 text-center text-muted-foreground">
+                    <div className="col-span-4 text-center text-muted-foreground h-60 flex flex-col gap-1 justify-center">
                         <h1 className="text-xl font-medium">No saved workouts</h1>
-                        <p className="text-sm text-muted-foreground/80">Saved the workouts you like to have quick access.</p>
+                        <p className="text-xs md:text-sm text-muted-foreground/80">Saved the workouts you like to have quick access.</p>
                     </div>
                 )}
                 {savedWorkouts.map((workout) => {
