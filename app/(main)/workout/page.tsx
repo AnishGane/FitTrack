@@ -2,6 +2,7 @@ import { getUserGoal } from '@/actions/dashboard.actions'
 import { getMonthlyWorkoutLogs } from '@/actions/workoutLog.actions';
 import { calculateStreakAndScore } from '@/algorithms/streak-consistency';
 import WorkoutLogForm from '@/components/forms/workout-log-form'
+import PageHeader from '@/components/page-header';
 import { WorkoutStatsSkeleton } from '@/skeletons/workout-stats-skeleton';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
@@ -36,10 +37,9 @@ const WorkoutStats = async () => {
 const WorkoutPage = async () => {
     return (
         <div>
-            <h1 className="text-2xl font-bold">Log a Workout</h1>
-            <p className="text-sm text-muted-foreground">Keep track of your progress & stay consistent.</p>
+            <PageHeader title="Log a Workout" description="Keep track of your progress & stay consistent." />
 
-            <div className="mt-4 max-w-xl mx-auto w-full">
+            <div className="mt-6 max-w-xl mx-auto w-full">
                 <WorkoutLogForm />
                 <Suspense fallback={<WorkoutStatsSkeleton />}>
                     <WorkoutStats />

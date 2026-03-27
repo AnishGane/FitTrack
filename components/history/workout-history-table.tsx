@@ -200,7 +200,7 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
             </Card>
 
             {/* Results count */}
-            <div className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between px-1 mt-2">
                 <p className="text-sm text-muted-foreground">
                     {isPending ? "Loading..." : (
                         <>
