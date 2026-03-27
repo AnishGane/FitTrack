@@ -229,7 +229,7 @@ const RecentActivityTable = ({ logs, savedWorkouts }: RecentActivityTableProps) 
                                                                     </AlertDialogDescription>
                                                                 </AlertDialogHeader>
                                                                 <AlertDialogFooter>
-                                                                    <AlertDialogCancel variant={"ghost"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
+                                                                    <AlertDialogCancel variant={"outline"} disabled={isPending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
                                                                     <Button
                                                                         onClick={() => handleDeleteWrokoutLog(log.id)}
                                                                         disabled={isPending}
@@ -238,7 +238,7 @@ const RecentActivityTable = ({ logs, savedWorkouts }: RecentActivityTableProps) 
                                                                         {isPending ? (
                                                                             <>
                                                                                 <Loader2 className="size-4 mr-2 animate-spin" />
-                                                                                Deleting...
+                                                                                Deleting
                                                                             </>
                                                                         ) : (
                                                                             "Continue"

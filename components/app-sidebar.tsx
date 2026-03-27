@@ -23,7 +23,7 @@ import { navItems } from "@/constants"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const { setOpenMobile, isMobile } = useSidebar()
+  const { setOpenMobile } = useSidebar()
 
   const { data: session } = authClient.useSession();
   const user = session?.user;

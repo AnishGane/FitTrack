@@ -313,7 +313,7 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
-                                                                <AlertDialogCancel variant={"ghost"} disabled={isDeletePending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
+                                                                <AlertDialogCancel variant={"outline"} disabled={isDeletePending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
                                                                 <Button
                                                                     onClick={() => handleDelete(log.id)}
                                                                     disabled={isDeletePending}
@@ -322,7 +322,7 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
                                                                     {isDeletePending ? (
                                                                         <>
                                                                             <Loader2 className="size-4 mr-2 animate-spin" />
-                                                                            Deleting...
+                                                                            Deleting
                                                                         </>
                                                                     ) : (
                                                                         "Continue"

@@ -1,6 +1,7 @@
 import { getSavedWorkouts } from "@/actions/common/common.action"
 import { getUserId, getWorkoutLogs } from "@/actions/workoutLog.actions";
 import DisplaySavedWorkout from "@/components/saved-workout/display-saved-workout";
+import SavedWorkoutSkeleton from "@/skeletons/saved-workout-skeleton";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
@@ -21,7 +22,7 @@ const SavedWorkoutPage = () => {
                 <p className="text-sm text-muted-foreground">View and manage your saved workouts.</p>
             </div>
 
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<SavedWorkoutSkeleton />}>
                 <DisplaySavedWorkoutSection />
             </Suspense>
         </div>

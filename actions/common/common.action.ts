@@ -15,6 +15,19 @@ export const deleteWorkoutAction = async (workoutId: string) => {
   if (!session?.user?.id) throw new Error("Not authenticated");
 
   try {
+    const [log] = await db
+      .select()
+      .from(workoutLogs)
+      .where(
+        and(
+          eq(workoutLogs.id, workoutId),
+          eq(workoutLogs.userId, session.user.id),
+        ),
+      )
+      .limit(1);
+
+    if (!log) throw new Error("Workout not found.");
+
     await db
       .delete(workoutLogs)
       .where(
@@ -24,10 +37,21 @@ export const deleteWorkoutAction = async (workoutId: string) => {
         ),
       );
 
-    // Immediate invalidation after mutation to avoid stale reads on next fetch.
+    await db
+      .delete(savedWorkouts)
+      .where(
+        and(
+          eq(savedWorkouts.userId, session.user.id),
+          eq(savedWorkouts.name, log.exerciseName),
+          eq(savedWorkouts.muscleGroup, log.muscleGroup),
+        ),
+      );
+
     revalidateTag(`workouts-${session.user.id}`, "max");
+    revalidateTag(`saved-workouts-${session.user.id}`, "max");
     revalidatePath("/dashboard");
     revalidatePath("/history");
+    revalidatePath("/saved-workout");
 
     return { success: true, message: "Workout deleted successfully!" };
   } catch (error) {
