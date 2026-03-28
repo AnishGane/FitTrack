@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useWorkoutPrefillStore } from "@/store/workout-prefill.store";
 import { WorkoutLog } from "@/db/schema";
+import { useWorkoutTemplateStore } from "@/store/workout-template.store";
 
 interface WorkoutLogFormtProps {
     initialData?: WorkoutLog //undefined - add mode, defined - edit mode
@@ -39,6 +40,7 @@ const EMPTY_DEFAULTS: WorkoutLogFormValue = {
     caloriesBurned: "" as any,
     notes: "",
     isPersonalBest: false,
+    templateId: undefined
 };
 
 function toFormValues(data: WorkoutLog): WorkoutLogFormValue {
@@ -66,12 +68,33 @@ function getFieldError(message?: string) {
 const WorkoutLogForm = ({ initialData, onSuccess }: WorkoutLogFormtProps) => {
     const isEditing = !!initialData;
     const { exerciseName, muscleGroup, clearPrefill } = useWorkoutPrefillStore();
+    const { selectedTemplate, clearTemplate } = useWorkoutTemplateStore();
 
     const form = useForm<WorkoutLogFormValue>({
         resolver: zodResolver(WorkoutLogSchema),
         mode: "all",
         defaultValues: initialData ? toFormValues(initialData) : EMPTY_DEFAULTS,
     });
+
+    useEffect(() => {
+        if (!isEditing && selectedTemplate) {
+            form.reset({
+                exerciseName: selectedTemplate.name,
+                muscleGroup: selectedTemplate.muscleGroup as any,
+                difficulty: selectedTemplate.difficulty as any,
+                sets: selectedTemplate.defaultSets ?? undefined,
+                reps: selectedTemplate.defaultReps ?? undefined,
+                weightKg: selectedTemplate.defaultWeightKg ?? undefined,
+                durationMin: selectedTemplate.defaultDurationMin ?? undefined,
+                distanceKm: selectedTemplate.defaultDistanceKm ?? undefined,
+                caloriesBurned: selectedTemplate.defaultCaloriesBurned ?? undefined,
+                notes: "",
+                isPersonalBest: false,
+                templateId: selectedTemplate.id
+            });
+            clearTemplate();
+        }
+    }, [selectedTemplate]);
 
     // Prefill from recommendation (add mode only)
     useEffect(() => {

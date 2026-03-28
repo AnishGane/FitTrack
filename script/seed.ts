@@ -1,15 +1,7 @@
 // scripts/seed.ts
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import {
-  schema,
-  workoutLogs,
-  goals,
-  workoutTemplates,
-  personalBests,
-  templateExercises,
-  NewWorkoutLog,
-} from "../db/schema";
+import { schema, workoutLogs, goals, NewWorkoutLog } from "../db/schema";
 
 import "dotenv/config";
 
@@ -26,11 +18,6 @@ function daysAgo(n: number): Date {
   d.setDate(d.getDate() - n);
   d.setHours(9, 0, 0, 0); // 9am workout time
   return d;
-}
-
-/** Pick a random item from an array */
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 // SEED FUNCTIONS
@@ -102,7 +89,7 @@ async function seedWorkoutLogs() {
       loggedAt: daysAgo(5),
     },
 
-    // Week 2 
+    // Week 2
     {
       userId: TEST_USER_ID,
       exerciseName: "Incline Bench Press",
@@ -265,247 +252,6 @@ async function seedWorkoutLogs() {
   console.log(`✅ ${logs.length} workout logs seeded`);
 }
 
-async function seedWorkoutTemplates() {
-  console.log("🌱 Seeding workout templates...");
-
-  // Insert templates first, get back their IDs
-  const [pushDay] = await db
-    .insert(workoutTemplates)
-    .values({
-      userId: TEST_USER_ID,
-      name: "Push Day A",
-      description: "Chest, shoulders, triceps — heavy compound focus",
-      muscleGroup: "chest",
-      isPublic: false,
-    })
-    .returning({ id: workoutTemplates.id });
-
-  const [pullDay] = await db
-    .insert(workoutTemplates)
-    .values({
-      userId: TEST_USER_ID,
-      name: "Pull Day A",
-      description: "Back and biceps — vertical and horizontal pulls",
-      muscleGroup: "back",
-      isPublic: false,
-    })
-    .returning({ id: workoutTemplates.id });
-
-  const [legDay] = await db
-    .insert(workoutTemplates)
-    .values({
-      userId: TEST_USER_ID,
-      name: "Leg Day",
-      description: "Full lower body — quads, hamstrings, glutes",
-      muscleGroup: "legs",
-      isPublic: false,
-    })
-    .returning({ id: workoutTemplates.id });
-
-  console.log("✅ 3 templates created");
-
-  // Template Exercises
-  console.log("🌱 Seeding template exercises...");
-
-  await db.insert(templateExercises).values([
-    // Push Day exercises
-    {
-      templateId: pushDay.id,
-      exerciseName: "Bench Press",
-      muscleGroup: "chest",
-      difficulty: "intermediate",
-      defaultSets: 4,
-      defaultReps: 8,
-      defaultWeightKg: 80,
-      orderIndex: 0,
-    },
-    {
-      templateId: pushDay.id,
-      exerciseName: "Incline Press",
-      muscleGroup: "chest",
-      difficulty: "intermediate",
-      defaultSets: 3,
-      defaultReps: 10,
-      defaultWeightKg: 65,
-      orderIndex: 1,
-    },
-    {
-      templateId: pushDay.id,
-      exerciseName: "Overhead Press",
-      muscleGroup: "shoulders",
-      difficulty: "intermediate",
-      defaultSets: 3,
-      defaultReps: 8,
-      defaultWeightKg: 50,
-      orderIndex: 2,
-    },
-    {
-      templateId: pushDay.id,
-      exerciseName: "Lateral Raises",
-      muscleGroup: "shoulders",
-      difficulty: "beginner",
-      defaultSets: 3,
-      defaultReps: 15,
-      defaultWeightKg: 10,
-      orderIndex: 3,
-    },
-    {
-      templateId: pushDay.id,
-      exerciseName: "Tricep Dips",
-      muscleGroup: "arms",
-      difficulty: "beginner",
-      defaultSets: 3,
-      defaultReps: 12,
-      orderIndex: 4,
-    },
-
-    // Pull Day exercises
-    {
-      templateId: pullDay.id,
-      exerciseName: "Deadlift",
-      muscleGroup: "back",
-      difficulty: "advanced",
-      defaultSets: 5,
-      defaultReps: 3,
-      defaultWeightKg: 140,
-      orderIndex: 0,
-    },
-    {
-      templateId: pullDay.id,
-      exerciseName: "Pull-ups",
-      muscleGroup: "back",
-      difficulty: "intermediate",
-      defaultSets: 4,
-      defaultReps: 8,
-      orderIndex: 1,
-    },
-    {
-      templateId: pullDay.id,
-      exerciseName: "Barbell Row",
-      muscleGroup: "back",
-      difficulty: "intermediate",
-      defaultSets: 4,
-      defaultReps: 8,
-      defaultWeightKg: 70,
-      orderIndex: 2,
-    },
-    {
-      templateId: pullDay.id,
-      exerciseName: "Lat Pulldown",
-      muscleGroup: "back",
-      difficulty: "beginner",
-      defaultSets: 3,
-      defaultReps: 12,
-      defaultWeightKg: 60,
-      orderIndex: 3,
-    },
-    {
-      templateId: pullDay.id,
-      exerciseName: "Bicep Curls",
-      muscleGroup: "arms",
-      difficulty: "beginner",
-      defaultSets: 3,
-      defaultReps: 12,
-      defaultWeightKg: 15,
-      orderIndex: 4,
-    },
-
-    // Leg Day exercises
-    {
-      templateId: legDay.id,
-      exerciseName: "Squats",
-      muscleGroup: "legs",
-      difficulty: "intermediate",
-      defaultSets: 5,
-      defaultReps: 5,
-      defaultWeightKg: 100,
-      orderIndex: 0,
-    },
-    {
-      templateId: legDay.id,
-      exerciseName: "Romanian Deadlift",
-      muscleGroup: "legs",
-      difficulty: "intermediate",
-      defaultSets: 4,
-      defaultReps: 10,
-      defaultWeightKg: 80,
-      orderIndex: 1,
-    },
-    {
-      templateId: legDay.id,
-      exerciseName: "Leg Press",
-      muscleGroup: "legs",
-      difficulty: "intermediate",
-      defaultSets: 4,
-      defaultReps: 12,
-      defaultWeightKg: 120,
-      orderIndex: 2,
-    },
-    {
-      templateId: legDay.id,
-      exerciseName: "Lunges",
-      muscleGroup: "legs",
-      difficulty: "beginner",
-      defaultSets: 3,
-      defaultReps: 12,
-      defaultWeightKg: 20,
-      orderIndex: 3,
-    },
-    {
-      templateId: legDay.id,
-      exerciseName: "Leg Raises",
-      muscleGroup: "core",
-      difficulty: "beginner",
-      defaultSets: 3,
-      defaultReps: 15,
-      orderIndex: 4,
-    },
-  ]);
-
-  console.log("✅ 15 template exercises seeded");
-}
-
-async function seedPersonalBests() {
-  console.log("🌱 Seeding personal bests...");
-
-  await db.insert(personalBests).values([
-    {
-      userId: TEST_USER_ID,
-      exerciseName: "Bench Press",
-      muscleGroup: "chest",
-      bestWeightKg: 80,
-      bestReps: 8,
-      achievedAt: daysAgo(1),
-    },
-    {
-      userId: TEST_USER_ID,
-      exerciseName: "Squats",
-      muscleGroup: "legs",
-      bestWeightKg: 100,
-      bestReps: 5,
-      achievedAt: daysAgo(3),
-    },
-    {
-      userId: TEST_USER_ID,
-      exerciseName: "Deadlift",
-      muscleGroup: "back",
-      bestWeightKg: 140,
-      bestReps: 3,
-      achievedAt: daysAgo(21),
-    },
-    {
-      userId: TEST_USER_ID,
-      exerciseName: "Running",
-      muscleGroup: "cardio",
-      bestDurationMin: 30,
-      bestDistanceKm: 5,
-      achievedAt: daysAgo(9),
-    },
-  ]);
-
-  console.log("✅ 4 personal bests seeded");
-}
-
 // MAIN — runs all seed functions in order
 
 async function main() {
@@ -521,8 +267,6 @@ async function main() {
   try {
     await seedGoal();
     await seedWorkoutLogs();
-    await seedWorkoutTemplates();
-    await seedPersonalBests();
 
     console.log("\n✅ All seed data inserted successfully!");
     console.log("   Open Drizzle Studio to verify: npx drizzle-kit studio");

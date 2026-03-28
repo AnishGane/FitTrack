@@ -1,8 +1,10 @@
 import { getUserGoal } from '@/actions/dashboard.actions'
+import { getUserTemplateUsage, getWorkoutTemplates } from '@/actions/workout-template.action';
 import { getMonthlyWorkoutLogs } from '@/actions/workoutLog.actions';
 import { calculateStreakAndScore } from '@/algorithms/streak-consistency';
 import WorkoutLogForm from '@/components/forms/workout-log-form'
 import PageHeader from '@/components/page-header';
+import WorkoutTemplate from '@/components/template/workout-template';
 import { WorkoutStatsSkeleton } from '@/skeletons/workout-stats-skeleton';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
@@ -34,16 +36,34 @@ const WorkoutStats = async () => {
     )
 }
 
+const WorkoutTemplatesSection = async () => {
+
+    const [templates, usageData] = await Promise.all([
+        getWorkoutTemplates(),
+        getUserTemplateUsage(),
+    ]);
+    const usageMap = Object.fromEntries(
+        usageData.map((u) => [u.templateId, u.useCount])
+    );
+    return <WorkoutTemplate template={templates} usageMap={usageMap} />;
+}
+
 const WorkoutPage = async () => {
     return (
         <div>
             <PageHeader title="Log a Workout" description="Keep track of your progress & stay consistent." />
-
-            <div className="mt-6 max-w-xl mx-auto w-full">
-                <WorkoutLogForm />
-                <Suspense fallback={<WorkoutStatsSkeleton />}>
-                    <WorkoutStats />
-                </Suspense>
+            <div className="flex flex-col xl:flex-row items-start xl:gap-8 gap-6 mt-6">
+                <div className=" max-w-xl mx-auto w-full  flex-1">
+                    <WorkoutLogForm />
+                    <Suspense fallback={<WorkoutStatsSkeleton />}>
+                        <WorkoutStats />
+                    </Suspense>
+                </div>
+                <div className='flex-1'>
+                    <Suspense fallback={<WorkoutStatsSkeleton />}>
+                        <WorkoutTemplatesSection />
+                    </Suspense>
+                </div>
             </div>
         </div >
     )

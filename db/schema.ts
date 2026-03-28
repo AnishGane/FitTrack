@@ -10,6 +10,7 @@ import {
   integer,
   real,
   varchar,
+  unique,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -152,69 +153,22 @@ export const goals = pgTable("goals", {
 
 // WORKOUT TEMPLATES (future-proof)
 // Lets users save a workout routine they can reuse
-// e.g. "Push Day A" with their favourite exercises
 export const workoutTemplates = pgTable("workout_templates", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id),
 
-  name: text("name").notNull(), // eg: Push Day A, Leg Day
-  description: text("description"),
-  muscleGroup: muscleGroupEnum("muscle_group"), // primary focus
-  isPublic: boolean("is_public").default(false), // share with others later
-
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-// TEMPLATE EXERCISES (future-proof)
-// Individual exercises that belong to a template
-// Separate table so a template can have multiple exercises
-export const templateExercises = pgTable("template_exercises", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  templateId: uuid("template_id")
-    .notNull()
-    .references(() => workoutTemplates.id, { onDelete: "cascade" }),
-  // cascade → if template deleted, its exercises auto-delete too
-
-  exerciseName: text("exercise_name").notNull(),
+  name: text("name").notNull(), // "Barbell Bench Press"
   muscleGroup: muscleGroupEnum("muscle_group").notNull(),
-  difficulty: difficultyEnum("difficulty"),
+  difficulty: difficultyEnum("difficulty").notNull(),
 
-  // Default targets for this exercise in the template
+  // ── Defaults (pre-filled in form) ───────────────────────────
   defaultSets: integer("default_sets"),
   defaultReps: integer("default_reps"),
   defaultWeightKg: real("default_weight_kg"),
-  orderIndex: integer("order_index").notNull().default(0), // display order
+  defaultDurationMin: integer("default_duration_min"),
+  defaultDistanceKm: real("default_distance_km"),
+  defaultCaloriesBurned: integer("default_calories_burned"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-// PERSONAL BESTS (future-proof)
-// Tracks the best performance per exercise per user
-// Updated automatically when isPersonalBest = true on a log
-export const personalBests = pgTable("personal_bests", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: text("user_id").notNull(),
-  exerciseName: text("exercise_name").notNull(),
-  muscleGroup: muscleGroupEnum("muscle_group").notNull(),
-
-  // Best values ever recorded
-  bestWeightKg: real("best_weight_kg"),
-  bestReps: integer("best_reps"),
-  bestDurationMin: integer("best_duration_min"),
-  bestDistanceKm: real("best_distance_km"),
-
-  // Which log entry this PB came from
-  workoutLogId: uuid("workout_log_id").references(() => workoutLogs.id, {
-    onDelete: "set null",
-  }),
-  // set null → if log is deleted, PB record stays but loses reference
-
-  achievedAt: timestamp("achieved_at").defaultNow().notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Saved workouts
@@ -238,10 +192,28 @@ export const savedWorkouts = pgTable("saved_workouts", {
   distanceKm: real("distance_km"),
   caloriesBurned: integer("calories_burned"),
 
-  useCount: integer("use_count").default(0).notNull(), // how many times user has used this template
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+// track the count usage for the workout templates
+export const userTemplateUsage = pgTable(
+  "user_template_usage",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    templateId: uuid("template_id")
+      .notNull()
+      .references(() => workoutTemplates.id, { onDelete: "cascade" }),
+    useCount: integer("use_count").default(1).notNull(),
+    lastUsedAt: timestamp("last_used_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    userTemplateUnique: unique().on(table.userId, table.templateId),
+  }),
+);
 
 // TYPESCRIPT TYPES
 // Inferred directly from schema — always stay in sync with DB
@@ -262,12 +234,7 @@ export type NewGoal = typeof goals.$inferInsert;
 export type WorkoutTemplate = typeof workoutTemplates.$inferSelect;
 export type NewWorkoutTemplate = typeof workoutTemplates.$inferInsert;
 
-export type TemplateExercise = typeof templateExercises.$inferSelect;
-export type NewTemplateExercise = typeof templateExercises.$inferInsert;
-
-// Personal Bests
-export type PersonalBest = typeof personalBests.$inferSelect;
-export type NewPersonalBest = typeof personalBests.$inferInsert;
+export type UserTemplateUsage = typeof userTemplateUsage.$inferSelect;
 
 // Enum value types — useful for typed dropdowns in forms
 export type MuscleGroup = (typeof muscleGroupEnum.enumValues)[number];
@@ -301,7 +268,5 @@ export const schema = {
   workoutLogs,
   goals,
   workoutTemplates,
-  templateExercises,
-  personalBests,
   savedWorkouts,
 };

@@ -78,6 +78,8 @@ export const WorkoutLogSchema = z
 
     notes: z.string().max(500, "Max 500 characters"),
     isPersonalBest: z.boolean().default(false),
+
+    templateId: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     const isCardio = data.muscleGroup === "cardio";

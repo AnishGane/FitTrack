@@ -8,6 +8,7 @@ import { WorkoutLogSchema } from "@/validation/validation";
 import { and, desc, eq } from "drizzle-orm";
 import { cacheLife, cacheTag, revalidateTag, updateTag } from "next/cache";
 import { headers } from "next/headers";
+import { trackTemplateUsageAction } from "./workout-template.action";
 
 export async function getUserId(): Promise<string> {
   const session = await auth.api.getSession({
@@ -86,6 +87,13 @@ export const logWorkoutAction = async (
       success: false,
       message: "Failed to save workout. Please try again.",
     };
+  }
+
+  if (rawValues && typeof rawValues === "object" && "templateId" in rawValues) {
+    const templateId = (rawValues as any).templateId;
+    if (templateId) {
+      await trackTemplateUsageAction(templateId);
+    }
   }
 
   // revalidateTag replaces all three revalidatePath calls

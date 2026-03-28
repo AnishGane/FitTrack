@@ -57,3 +57,14 @@ export const navItems = [
   { title: "Goals", url: "/goals", icon: Target },
   { title: "History", url: "/history", icon: History },
 ];
+
+export const TABS = [
+  { value: "chest", label: "Chest", emoji: "💪" },
+  { value: "back", label: "Back", emoji: "🔙" },
+  { value: "legs", label: "Legs", emoji: "🦵" },
+  { value: "shoulders", label: "Shoulders", emoji: "🏋️" },
+  { value: "arms", label: "Arms", emoji: "💪" },
+  { value: "core", label: "Core", emoji: "🎯" },
+  { value: "cardio", label: "Cardio", emoji: "🏃" },
+  { value: "full_body", label: "Full Body", emoji: "⚡" },
+] as const;

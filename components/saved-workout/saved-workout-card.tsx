@@ -74,11 +74,8 @@ const SavedWorkoutCard = ({ workout, logId }: SavedWorkoutCardProps) => {
                     {workout.name}
                 </p>
 
-                <div className="flex items-center justify-between text-white/70 text-xs">
+                <div className="text-white/70 text-xs">
                     <span className="capitalize">{workout.difficulty}</span>
-                    {workout.useCount > 0 && (
-                        <span>Used {workout.useCount}×</span>
-                    )}
                 </div>
 
                 <div className="flex items-center justify-between">
