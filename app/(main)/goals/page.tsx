@@ -30,7 +30,7 @@ const GoalsPage = () => {
                         <WeekProgressCard />
                     </Suspense>
 
-                    <Card className="relative w-full sm:flex-1 h-64 rounded-3xl">
+                    <Card className="relative w-full sm:flex-1 h-64 rounded-2xl">
                         {/* Overlay */}
                         <div className='bg-linear-to-b from-transparent via-black/70 to-black absolute z-8 w-full h-full'></div>
                         <Image

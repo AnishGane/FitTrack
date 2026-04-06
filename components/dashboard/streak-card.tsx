@@ -49,7 +49,7 @@ const StreakCard = ({ data }: StreakCardProp) => {
     const { currentStreak, consistencyScore, totalWorkoutsThisWeek, targetDaysPerWeek } = data;
 
     return (
-        <Card className="bg-card border-border sm:p-4 flex justify-between sm:rounded-3xl">
+        <Card className="bg-card border-border sm:p-4 flex justify-between sm:rounded-2xl">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-semibold uppercase text-muted-foreground">
                     Streak &amp; Consistency

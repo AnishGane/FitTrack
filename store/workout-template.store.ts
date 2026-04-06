@@ -1,4 +1,3 @@
-// store/workout-template.store.ts
 import { create } from "zustand";
 import { WorkoutTemplate } from "@/db/schema";
 

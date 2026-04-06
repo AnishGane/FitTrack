@@ -62,7 +62,7 @@ const WorkoutChart = ({ data }: WorkoutChartProps) => {
     const primaryMuted = "oklch(0.6746 0.1414 261.338/ 0.65)";
 
     return (
-        <Card className="bg-card border-border sm:rounded-3xl">
+        <Card className="bg-card border-border sm:rounded-2xl">
             <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                     <CardTitle className="text-base font-semibold text-foreground">
@@ -72,7 +72,7 @@ const WorkoutChart = ({ data }: WorkoutChartProps) => {
                         Volume and frequency over time
                     </p>
                 </div>
-                {/* ✅ Legend dot uses inline style with resolved color */}
+                {/* Legend dot uses inline style with resolved color */}
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span
                         className="inline-block size-3 rounded-full"

@@ -55,7 +55,7 @@ const ViewWorkoutDetail = ({ log }: ViewWorkoutDetailProps) => {
                 <CardHeader className='font-semibold text-base flex justify-between items-center'>Your Note <Shredder className='size-6' /></CardHeader>
 
                 <CardContent className='mx-4 p-0!'>
-                    <p>{log?.notes}</p>
+                    <p>{log?.notes || "No notes."}</p>
                 </CardContent>
             </Card>
 

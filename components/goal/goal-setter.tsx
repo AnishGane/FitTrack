@@ -33,7 +33,7 @@ const GoalSetter = ({ initialTarget, doneDays }: GoalSetterProps) => {
     const hasChanged = selected !== initialTarget;
 
     return (
-        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-3xl">
+        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-2xl">
             <CardContent className="flex flex-col gap-6">
                 <div>
                     <span className='text-[10px] font-semibold uppercase tracking-widest text-muted-foreground'>Weekly Target</span>

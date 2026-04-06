@@ -44,6 +44,7 @@ export function SignupForm({
     password: false,
     confirmPassword: false
   });
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const form = useForm<z.infer<typeof SignUpFormSchema>>({
     resolver: zodResolver(SignUpFormSchema),
@@ -56,10 +57,18 @@ export function SignupForm({
   })
 
   const handleSignUpWithGoogle = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/"
-    })
+    setIsGoogleLoading(true);
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/"
+      })
+    } catch (error) {
+      console.log(error);
+      toast.error("Error logging in with Google");
+    } finally {
+      setIsGoogleLoading(false);
+    }
   }
 
   async function onSubmit(data: z.infer<typeof SignUpFormSchema>) {
@@ -234,8 +243,19 @@ export function SignupForm({
         </FieldSeparator>
         <Field>
           <Button variant="outline" type="button" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-black/50 hover:bg-black/5!" onClick={handleSignUpWithGoogle}>
-            <Google />
-            Signup with Google
+            {
+              isGoogleLoading ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Signing up with Google...
+                </>
+              ) : (
+                <>
+                  <Google />
+                  Signup with Google
+                </>
+              )
+            }
           </Button>
           <FieldDescription className="px-6 text-center text-neutral-500! py-2">
             Already have an account? <Link href="/login">Sign in</Link>

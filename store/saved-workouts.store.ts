@@ -11,7 +11,7 @@ interface SavedWorkoutsState {
   setSaving: (logId: string) => void;
   setSaved: (logId: string, savedId: string) => void;
   setIdle: (logId: string) => void;
-  setUnsaving: (logid: string) => void;
+  setUnsaving: (logId: string) => void;
   getStatus: (logId: string) => {
     status: "idle" | "saving" | "saved" | "unsaving";
     savedId?: string;

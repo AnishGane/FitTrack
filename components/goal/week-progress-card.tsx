@@ -115,7 +115,7 @@ async function WeekProgressCard() {
     const data = await getWeekProgress();
 
     return (
-        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-3xl md:w-fit">
+        <Card className="bg-card border-border sm:p-4 sm:py-5 sm:rounded-2xl md:w-fit">
             <CardContent className=" flex flex-col gap-5">
                 <h2 className="text-base font-semibold text-foreground">
                     This Week&apos;s Progress

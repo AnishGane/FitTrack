@@ -21,7 +21,7 @@ async function DashboardContent() {
   const chartData = buildChartData(monthlyLogs);
 
   return (
-    <div className="flex flex-col gap-6 sm:p-6 sm:bg-primary/5 rounded-4xl">
+    <div className="flex flex-col gap-6 sm:p-4 sm:bg-primary/5 rounded-4xl">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <StreakCard data={streakData} />
         <RecommendationCard recommendation={recommendation} />

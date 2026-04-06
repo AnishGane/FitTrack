@@ -35,6 +35,7 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -63,10 +64,18 @@ export function LoginForm({
   }
 
   const handleLoginWithGoogle = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/"
-    })
+    setIsGoogleLoading(true);
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/"
+      })
+    } catch (error) {
+      console.log(error);
+      toast.error("Error logging in with Google");
+    } finally {
+      setIsGoogleLoading(false);
+    }
   }
 
   return (
@@ -146,8 +155,19 @@ export function LoginForm({
         </FieldSeparator>
         <Field>
           <Button variant="outline" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-black/50 hover:bg-black/5!" type="button" onClick={handleLoginWithGoogle}>
-            <Google />
-            Login with Google
+            {
+              isGoogleLoading ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Logging in with Google...
+                </>
+              ) : (
+                <>
+                  <Google />
+                  Login with Google
+                </>
+              )
+            }
           </Button>
           <FieldDescription className="text-center text-neutral-500! py-2">
             Don&apos;t have an account?{" "}

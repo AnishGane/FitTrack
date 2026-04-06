@@ -496,7 +496,7 @@ const WorkoutLogForm = ({ initialData, onSuccess }: WorkoutLogFormtProps) => {
                         <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className={cn("cursor-pointer py-4.5", isEditing && "w-full")}
+                            className={cn("cursor-pointer py-5", isEditing && "w-full")}
                             form="form-rhf-demo"
                         >
                             {isSubmitting ? (

@@ -79,7 +79,7 @@ const RecentActivityTable = ({ logs, savedWorkouts }: RecentActivityTableProps) 
 
     return (
         <>
-            <Card className="bg-card border-border sm:rounded-3xl">
+            <Card className="bg-card border-border sm:rounded-2xl">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div className="flex flex-col">
                         <CardTitle className="text-base font-semibold text-foreground">
