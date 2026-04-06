@@ -78,4 +78,17 @@ npm run dev
 ```
 
 ## Screenshots
+
 ![Signup Screen](./screenshots/SignupScreen.png)
+![Dashboard Screen (Dark)](./screenshots/DashboardDark.png)
+![Dashboard Screen (Light)](./screenshots/DashboardLight.png)
+![Workout Screen](./screenshots/WorkoutLogScreen.png)
+![Goals Screen](./screenshots/GoalScreen.png)
+![History Screen](./screenshots/HistoryScreen.png)
+
+## Future Improvements
+- Add more algorithm and improve it
+- Improve UI/UX
+
+## Author
+Anish Gane
