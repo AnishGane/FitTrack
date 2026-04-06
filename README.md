@@ -63,7 +63,7 @@ cd FitTrack
 
 ### 3. Install dependencies
 
-npm install
+npm install or pnpm install
 
 ## Environment Variables
 
@@ -79,16 +79,35 @@ npm run dev
 
 ## Screenshots
 
+##### Signup Screen
+
 ![Signup Screen](./screenshots/SignupScreen.png)
+
+##### Dashboard Screen Dark
+
 ![Dashboard Screen (Dark)](./screenshots/DashboardDark.png)
+
+##### Dashboard Screen Light
+
 ![Dashboard Screen (Light)](./screenshots/DashboardLight.png)
+
+##### Workout Screen
+
 ![Workout Screen](./screenshots/WorkoutLogScreen.png)
+
+##### Goals Screen
+
 ![Goals Screen](./screenshots/GoalScreen.png)
+
+##### History Screen
+
 ![History Screen](./screenshots/HistoryScreen.png)
 
 ## Future Improvements
-- Add more algorithm and improve it
+
+- Add more algorithm and improve it progressively
 - Improve UI/UX
 
 ## Author
+
 Anish Gane
