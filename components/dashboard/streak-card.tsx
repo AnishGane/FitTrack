@@ -92,8 +92,6 @@ const StreakCard = ({ data }: StreakCardProp) => {
                         </p>
                     </>
                 )}
-
-
             </CardContent>
         </Card>
     )

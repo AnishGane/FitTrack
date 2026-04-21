@@ -1,14 +1,14 @@
 import { LayoutDashboard, Dumbbell, Target, History } from "lucide-react";
 
 export const MUSCLE_GROUPS = [
-  { value: "chest", label: "Chest", emoji: "💪" },
-  { value: "back", label: "Back", emoji: "🔙" },
-  { value: "legs", label: "Legs", emoji: "🦵" },
-  { value: "shoulders", label: "Shoulders", emoji: "🏋️" },
-  { value: "arms", label: "Arms", emoji: "💪" },
-  { value: "core", label: "Core", emoji: "🎯" },
-  { value: "cardio", label: "Cardio", emoji: "🏃" },
-  { value: "full_body", label: "Full Body", emoji: "⚡" },
+  { value: "chest", label: "Chest" },
+  { value: "back", label: "Back" },
+  { value: "legs", label: "Legs" },
+  { value: "shoulders", label: "Shoulders" },
+  { value: "arms", label: "Arms" },
+  { value: "core", label: "Core" },
+  { value: "cardio", label: "Cardio" },
+  { value: "full_body", label: "Full Body" },
 ] as const;
 
 export const DIFFICULTIES = [
@@ -59,12 +59,12 @@ export const navItems = [
 ];
 
 export const TABS = [
-  { value: "chest", label: "Chest", emoji: "💪" },
-  { value: "back", label: "Back", emoji: "🔙" },
-  { value: "legs", label: "Legs", emoji: "🦵" },
-  { value: "shoulders", label: "Shoulders", emoji: "🏋️" },
-  { value: "arms", label: "Arms", emoji: "💪" },
-  { value: "core", label: "Core", emoji: "🎯" },
-  { value: "cardio", label: "Cardio", emoji: "🏃" },
-  { value: "full_body", label: "Full Body", emoji: "⚡" },
+  { value: "chest", label: "Chest" },
+  { value: "back", label: "Back" },
+  { value: "legs", label: "Legs" },
+  { value: "shoulders", label: "Shoulders" },
+  { value: "arms", label: "Arms" },
+  { value: "core", label: "Core" },
+  { value: "cardio", label: "Cardio" },
+  { value: "full_body", label: "Full Body" },
 ] as const;

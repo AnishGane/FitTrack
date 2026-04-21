@@ -308,12 +308,12 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle className="font-semibold">Are you absolutely sure?</AlertDialogTitle>
                                                                 <AlertDialogDescription>
-                                                                    This action cannot be undone. This will permanently this workout log
+                                                                    You are about to delete <span className="text-primary font-semibold">{log.exerciseName}</span> from workout log. This action cannot be undone. This will permanently this workout log
                                                                     from our servers.
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
-                                                                <AlertDialogCancel variant={"outline"} disabled={isDeletePending} className="cursor-pointer p-4.5">Cancel</AlertDialogCancel>
+                                                                <AlertDialogCancel variant={"outline"} disabled={isDeletePending} className="cursor-pointer p-4.5">No, Keep it</AlertDialogCancel>
                                                                 <Button
                                                                     onClick={() => handleDelete(log.id)}
                                                                     disabled={isDeletePending}
@@ -325,7 +325,7 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
                                                                             Deleting
                                                                         </>
                                                                     ) : (
-                                                                        "Continue"
+                                                                        "Yes, Delete it"
                                                                     )}
                                                                 </Button>
                                                             </AlertDialogFooter>

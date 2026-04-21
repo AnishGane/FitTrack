@@ -5,6 +5,7 @@ import { calculateStreakAndScore } from '@/algorithms/streak-consistency';
 import WorkoutLogForm from '@/components/forms/workout-log-form'
 import PageHeader from '@/components/page-header';
 import WorkoutTemplate from '@/components/template/workout-template';
+import { Card } from '@/components/ui/card';
 import { WorkoutStatsSkeleton } from '@/skeletons/workout-stats-skeleton';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
@@ -19,20 +20,23 @@ const WorkoutStats = async () => {
 
     const totalSets = monthlyLogs.reduce((acc, log) => acc + (log.sets ?? 0), 0);
     return (
-        <div className='grid grid-cols-2 gap-4 md:grid-cols-3 my-4 md:my-6'>
-            <div className="flex flex-col gap-1 ring-1 ring-ring/20 rounded-xl shadow-sm bg-muted/10 py-4 text-center">
-                <span className="text-3xl font-bold text-destructive">{streakData.currentStreak}</span>
-                <p className='text-xs text-muted-foreground'>Days Streak</p>
+        <Card className='px-2 md:px-4 py-4! mt-4'>
+
+            <div className='grid grid-cols-2 gap-4 md:grid-cols-3'>
+                <div className="flex flex-col gap-1 ring-1 ring-ring/20 rounded-xl shadow-sm bg-muted/10 py-4 text-center">
+                    <span className="text-3xl font-bold text-destructive">{streakData.currentStreak}</span>
+                    <p className='text-xs text-muted-foreground'>Days Streak</p>
+                </div>
+                <div className="flex flex-col gap-1 ring-1 ring-ring/20 rounded-xl shadow-sm bg-muted/10 py-4 text-center">
+                    <span className="text-3xl font-bold text-destructive">{totalSets}</span>
+                    <p className='text-xs text-muted-foreground'>Total Monthly Sets</p>
+                </div>
+                <div className="flex flex-col gap-1 ring-1 ring-ring/20 rounded-xl shadow-sm bg-muted/10 py-4 text-center">
+                    <span className="text-3xl font-bold text-destructive">{streakData.consistencyScore}%</span>
+                    <p className='text-xs text-muted-foreground'>Weekly Goal</p>
+                </div>
             </div>
-            <div className="flex flex-col gap-1 ring-1 ring-ring/20 rounded-xl shadow-sm bg-muted/10 py-4 text-center">
-                <span className="text-3xl font-bold text-destructive">{totalSets}</span>
-                <p className='text-xs text-muted-foreground'>Total Monthly Sets</p>
-            </div>
-            <div className="flex flex-col gap-1 ring-1 ring-ring/20 rounded-xl shadow-sm bg-muted/10 py-4 text-center">
-                <span className="text-3xl font-bold text-destructive">{streakData.consistencyScore}%</span>
-                <p className='text-xs text-muted-foreground'>Weekly Goal</p>
-            </div>
-        </div>
+        </Card>
     )
 }
 

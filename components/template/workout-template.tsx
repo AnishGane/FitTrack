@@ -29,12 +29,11 @@ const WorkoutTemplateList = ({ template, usageMap }: WorkoutTemplateListProps) =
             </div>
             <Tabs defaultValue="chest" className="mt-8">
                 <TabsList className="flex flex-wrap h-auto gap-1.5 bg-muted/40 rounded-xl w-full">
-                    {TABS.map(({ value, label, emoji }) => (
+                    {TABS.map(({ value, label }) => (
                         <TabsTrigger
                             key={value}
                             value={value}
-                            className="shrink-0 gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer">
-                            <span>{emoji}</span>
+                            className="gap-1.5 px-3 py-1.5 rounded-lg text-xs flex items-center justify-between sm:text-sm whitespace-nowrap data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer">
                             <span>{label}</span>
                             {grouped[value]?.length > 0 && (
                                 <Badge className="text-[10px] bg-primary/80 py-2 px-1.5 rounded-full leading-none">

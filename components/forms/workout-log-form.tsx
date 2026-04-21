@@ -186,8 +186,7 @@ const WorkoutLogForm = ({ initialData, onSuccess }: WorkoutLogFormtProps) => {
                                             <SelectContent>
                                                 {MUSCLE_GROUPS.map((group) => (
                                                     <SelectItem key={group.value} value={group.value}>
-                                                        <span className="flex items-center gap-2">
-                                                            <span>{group.emoji}</span>
+                                                        <span className="flex items-center gap-2 ml-2">
                                                             {group.label}
                                                         </span>
                                                     </SelectItem>
@@ -489,14 +488,14 @@ const WorkoutLogForm = ({ initialData, onSuccess }: WorkoutLogFormtProps) => {
                     </FieldGroup>
                     <Field orientation="horizontal" className="justify-between mb-1 mt-6">
                         {!isEditing && (
-                            <Button type="button" variant="outline" className="py-4.5" onClick={() => form.reset(EMPTY_DEFAULTS)}>
+                            <Button type="button" variant="outline" className="p-4.5" onClick={() => form.reset(EMPTY_DEFAULTS)}>
                                 Reset
                             </Button>
                         )}
                         <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className={cn("cursor-pointer py-5", isEditing && "w-full")}
+                            className={cn("cursor-pointer p-5", isEditing && "w-full")}
                             form="form-rhf-demo"
                         >
                             {isSubmitting ? (
@@ -504,13 +503,13 @@ const WorkoutLogForm = ({ initialData, onSuccess }: WorkoutLogFormtProps) => {
                                     <Loader2 className="animate-spin" />
                                     {isEditing ? "Updating..." : "Saving..."}
                                 </div>
-                            ) : isEditing ? "Update Workout ✏️" : "Save Workout 💪"}
+                            ) : isEditing ? "Update Workout" : "Save Workout"}
                         </Button>
                     </Field>
                 </form>
             </CardContent>
             {!isEditing && (
-                <CardFooter>
+                <CardFooter className="py-5">
                     <CardDescription className="text-[10px] md:text-xs font-semibold text-muted-foreground italic text-center">
                         "Strength does not come from what you can do. It comes from overcoming the things you once thought you couldn't."
                     </CardDescription>

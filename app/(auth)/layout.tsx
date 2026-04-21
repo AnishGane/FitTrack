@@ -4,18 +4,7 @@ import React from 'react'
 
 const layout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className="min-h-screen w-full bg-white relative overflow-hidden">
-            {/* Soft Blue Radial Background */}
-            <div
-                className="absolute inset-0 z-0"
-                style={{
-                    background: "#ffffff",
-                    backgroundImage: `
-       radial-gradient(circle at top center, rgba(59, 130, 246, 0.5),transparent 70%)
-     `,
-                }}
-            />
-            {/* Your Content Here */}
+        <div className="min-h-screen w-full overflow-hidden">
             <div className="grid min-h-svh lg:grid-cols-2">
                 <div className="flex flex-col gap-4 p-6 md:p-10 z-99">
                     <div className="flex justify-center gap-2 md:justify-start">
@@ -29,17 +18,31 @@ const layout = ({ children }: { children: React.ReactNode }) => {
                         </Link>
                     </div>
                     <div className="flex flex-1 items-center justify-center">
-                        <div className="w-full max-w-xs z-99">
+                        <div className="w-full max-w-sm mx-auto z-99">
                             {children}
                         </div>
                     </div>
                 </div>
-                <div className=" relative hidden lg:block">
-                    <img
-                        src="/DemoMockupScreen.png"
-                        alt="Image"
-                        className="absolute top-1/2 -left-10 rotate-2  -translate-y-1/2 w-full object-cover"
+                <div className="min-h-screen relative hidden lg:flex flex-col items-center justify-center w-full">
+                    {/* Emerald Void */}
+                    <div
+                        className="absolute inset-0 z-0"
+                        style={{
+                            background: "radial-gradient(125% 125% at 50% 10%, #000000 40%, #072607 100%)",
+                        }}
                     />
+                    {/* Main Content */}
+                    <div className="relative flex flex-col z-30 min-h-screen w-full max-w-md items-center justify-center px-8">
+                        <h2 className="text-5xl font-medium tracking-wide uppercase text-white mb-4 text-center">
+                            Welcome to <br /> FitTrack
+                        </h2>
+                        <p className="text-sm text-white/80 mt-4 mb-2 text-left">
+                            Your all-in-one workout tracker for setting, monitoring, and achieving your fitness goals.
+                        </p>
+                        <p className="text-sm text-white/80 text-right">
+                            Sign in to start logging your workouts, tracking progress, and staying motivated on your fitness journey.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

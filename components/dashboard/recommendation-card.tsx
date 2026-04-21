@@ -34,7 +34,6 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
     const setPrefill = useWorkoutPrefillStore((s) => s.setPrefill);
     const router = useRouter();
 
-
     function handleExerciseClick(exerciseName: string) {
         setPrefill(exerciseName, muscleGroup); // set global state
         router.push("/workout");
@@ -42,7 +41,6 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
 
     return (
         <div className="p-[2px] rounded-xl sm:rounded-2xl bg-linear-to-r from-blue-500 via-green-400">
-
             <Card className="bg-card flex flex-col sm:p-4 sm:py-5 sm:rounded-2xl">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
@@ -94,7 +92,7 @@ const RecommendationCard = ({ recommendation }: RecommendationCardProps) => {
                     {/* CTA */}
                     <Button
                         asChild
-                        className="w-full rounded-2xl mt-auto bg-primary hover:bg-primary/90 text-primary-foreground py-5.5 font-semibold"
+                        className="w-full rounded-xl mt-auto bg-primary hover:bg-primary/90 text-primary-foreground py-5.5 font-semibold"
                         size="lg"
                     >
                         <Link href="/workout" className="flex items-center justify-center gap-2">

@@ -22,6 +22,11 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react"
 import Link from "next/link"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 
 const LoginFormSchema = z.object({
   email: z.string().email("Please enter a valid email").toLowerCase(),
@@ -82,8 +87,8 @@ export function LoginForm({
     <form onSubmit={form.handleSubmit(onSubmit)} id="form-rhf-demo" className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl text-black font-bold">Login to your account</h1>
-          <p className="text-black/50 text-sm text-balance">
+          <h1 className="text-2xl text-black font-semibold">Login to your account</h1>
+          <p className="text-black/60 text-[13px] text-balance">
             Enter your email below to login to your account
           </p>
         </div>
@@ -102,7 +107,7 @@ export function LoginForm({
                 placeholder="your email address"
                 autoComplete="on"
                 autoFocus={true}
-                className="border border-black/50 placeholder:text-black/50 bg-transparent!"
+                className="border border-black/50 placeholder:text-black/50 py-4.5!"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -118,22 +123,23 @@ export function LoginForm({
               <FieldLabel htmlFor="form-rhf-demo-password">
                 Password
               </FieldLabel>
-              <div className="relative">
-                <Input
+              <InputGroup className="border border-black/50 rounded-md placeholder:text-black/50 py-4.5!">
+                <InputGroupInput
                   {...field}
                   id="form-rhf-demo-password"
                   aria-invalid={fieldState.invalid}
                   placeholder="••••••"
                   autoComplete="off"
                   type={showPassword ? "text" : "password"}
-                  className="border border-black/50 placeholder:text-black/50 bg-transparent!"
                 />
-                {showPassword ? (
-                  <EyeIcon onClick={() => setShowPassword(false)} className="size-3.5 absolute right-3 top-2.5 cursor-pointer text-black" />
-                ) : (
-                  <EyeOffIcon onClick={() => setShowPassword(true)} className="size-3.5 absolute top-2.5 right-3 cursor-pointer text-black" />
-                )}
-              </div>
+                <InputGroupAddon align="inline-end">
+                  {showPassword ? (
+                    <EyeIcon onClick={() => setShowPassword(false)} className="size-4 cursor-pointer text-black" />
+                  ) : (
+                    <EyeOffIcon onClick={() => setShowPassword(true)} className="size-4 cursor-pointer text-black" />
+                  )}
+                </InputGroupAddon>
+              </InputGroup>
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
@@ -141,7 +147,7 @@ export function LoginForm({
           )}
         />
         <Field>
-          <Button type="submit" disabled={loading} className="py-5 font-semibold">
+          <Button type="submit" disabled={loading} className="py-5 font-semibold cursor-pointer">
             {loading ? (
               <>
                 <Loader2 className="animate-spin" />
@@ -154,7 +160,7 @@ export function LoginForm({
           Or continue with
         </FieldSeparator>
         <Field>
-          <Button variant="outline" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-black/50 hover:bg-black/5!" type="button" onClick={handleLoginWithGoogle}>
+          <Button disabled={isGoogleLoading} variant="outline" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-border hover:bg-black/5!" type="button" onClick={handleLoginWithGoogle}>
             {
               isGoogleLoading ? (
                 <>
@@ -171,7 +177,7 @@ export function LoginForm({
           </Button>
           <FieldDescription className="text-center text-neutral-500! py-2">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline underline-offset-4">
+            <Link href="/signup">
               Sign up
             </Link>
           </FieldDescription>

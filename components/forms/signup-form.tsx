@@ -22,6 +22,7 @@ import { toast } from "sonner"
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react"
 import { Google } from "../ui/google"
 import { authClient } from "@/lib/auth-client"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
 
 const SignUpFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -96,8 +97,8 @@ export function SignupForm({
     <form onSubmit={form.handleSubmit(onSubmit)} id="form-rhf-demo" className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold text-black">Create your account</h1>
-          <p className="text-black/50 text-sm text-balance">
+          <h1 className="text-2xl font-semibold text-black">Create your account</h1>
+          <p className="text-black/50 text-[13px] text-balance">
             Fill in the form below to create your account
           </p>
         </div>
@@ -115,7 +116,7 @@ export function SignupForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="Ashley Smith"
                 autoComplete="off"
-                className="border border-black/50 placeholder:text-black/50 bg-transparent!"
+                className="border border-black/50 placeholder:text-black/50 bg-transparent! py-4.5!"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -137,7 +138,7 @@ export function SignupForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="ashleysmith@gmail.com"
                 autoComplete="on"
-                className="border border-black/50 placeholder:text-black/50 bg-transparent!"
+                className="border border-black/50 placeholder:text-black/50 bg-transparent! py-4.5!"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -156,29 +157,29 @@ export function SignupForm({
               <FieldLabel htmlFor="form-rhf-demo-password">
                 Password
               </FieldLabel>
-              <div className="relative">
-
-                <Input
+              <InputGroup className="border border-black/50 rounded-md placeholder:text-black/50 py-4.5!">
+                <InputGroupInput
                   {...field}
                   id="form-rhf-demo-password"
                   aria-invalid={fieldState.invalid}
                   placeholder="••••••"
                   autoComplete="off"
                   type={showPassword.password ? "text" : "password"}
-                  className="border border-black/50 placeholder:text-black/50 bg-transparent!"
                 />
-                {showPassword.password ? (
-                  <EyeIcon onClick={() => setShowPassword({
-                    ...showPassword,
-                    password: false
-                  })} className="size-3.5 absolute right-3 top-2.5 cursor-pointer text-black" />
-                ) : (
-                  <EyeOffIcon onClick={() => setShowPassword({
-                    ...showPassword,
-                    password: true
-                  })} className="size-3.5 absolute top-2.5 right-3 cursor-pointer text-black" />
-                )}
-              </div>
+                <InputGroupAddon align="inline-end">
+                  {showPassword.password ? (
+                    <EyeIcon onClick={() => setShowPassword({
+                      ...showPassword,
+                      password: false
+                    })} className="size-4 cursor-pointer text-black" />
+                  ) : (
+                    <EyeOffIcon onClick={() => setShowPassword({
+                      ...showPassword,
+                      password: true
+                    })} className="size-4 cursor-pointer text-black" />
+                  )}
+                </InputGroupAddon>
+              </InputGroup>
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
@@ -196,29 +197,29 @@ export function SignupForm({
               <FieldLabel htmlFor="form-rhf-demo-confirmPassword">
                 Confirm Password
               </FieldLabel>
-              <div className="relative">
-
-                <Input
+              <InputGroup className="border border-black/50 rounded-md placeholder:text-black/50 py-4.5!">
+                <InputGroupInput
                   {...field}
-                  id="form-rhf-demo-confirmPassword"
+                  id="form-rhf-demo-password"
                   aria-invalid={fieldState.invalid}
                   placeholder="••••••"
                   autoComplete="off"
                   type={showPassword.confirmPassword ? "text" : "password"}
-                  className="border border-black/50 placeholder:text-black/50 bg-transparent!"
                 />
-                {showPassword.confirmPassword ? (
-                  <EyeIcon onClick={() => setShowPassword({
-                    ...showPassword,
-                    confirmPassword: false
-                  })} className="size-3.5 absolute right-3 top-2.5 cursor-pointer text-black" />
-                ) : (
-                  <EyeOffIcon onClick={() => setShowPassword({
-                    ...showPassword,
-                    confirmPassword: true
-                  })} className="size-3.5 absolute top-2.5 right-3 cursor-pointer text-black" />
-                )}
-              </div>
+                <InputGroupAddon align="inline-end">
+                  {showPassword.confirmPassword ? (
+                    <EyeIcon onClick={() => setShowPassword({
+                      ...showPassword,
+                      confirmPassword: false
+                    })} className="size-4 cursor-pointer text-black" />
+                  ) : (
+                    <EyeOffIcon onClick={() => setShowPassword({
+                      ...showPassword,
+                      confirmPassword: true
+                    })} className="size-4 cursor-pointer text-black" />
+                  )}
+                </InputGroupAddon>
+              </InputGroup>
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
@@ -242,7 +243,7 @@ export function SignupForm({
           Or continue with
         </FieldSeparator>
         <Field>
-          <Button variant="outline" type="button" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-black/50 hover:bg-black/5!" onClick={handleSignUpWithGoogle}>
+          <Button disabled={isGoogleLoading} variant="outline" type="button" className="py-5 cursor-pointer bg-transparent! text-neutral-800! border border-border hover:bg-black/5!" onClick={handleSignUpWithGoogle}>
             {
               isGoogleLoading ? (
                 <>
