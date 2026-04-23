@@ -1,23 +1,6 @@
 import type { WorkoutLog } from "@/db/schema";
 import { formatMuscleGroup } from "../lib/helper";
-
-export type MuscleGroup =
-  | "chest"
-  | "back"
-  | "legs"
-  | "shoulders"
-  | "arms"
-  | "core"
-  | "cardio"
-  | "full_body";
-
-export interface WorkoutRecommendation {
-  muscleGroup: MuscleGroup;
-  reason: string;
-  suggestedExercises: string[];
-  recoveryStatus: "fully_recovered" | "partially_recovered" | "needs_rest";
-  daysSinceLastTrained: number | null;
-}
+import { MuscleGroup, WorkoutRecommendation } from "@/types";
 
 // How many days each muscle group needs to recover before training again
 const RECOVERY_DAYS: Record<MuscleGroup, number> = {
@@ -158,4 +141,3 @@ export function getWorkoutRecommendation(
     daysSinceLastTrained: daysSince,
   };
 }
-

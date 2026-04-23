@@ -4,6 +4,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getStreakData, getWeekProgress } from "@/actions/goal.action";
 import { Button } from "../ui/button";
+import { DayBubbleProps } from "@/types";
 
 //  Circular progress ring
 function CircularProgress({ done, total }: { done: number; total: number }) {
@@ -65,12 +66,7 @@ function DayBubble({
     isToday,
     hasWorkout,
     isFuture,
-}: {
-    label: string;
-    isToday: boolean;
-    hasWorkout: boolean;
-    isFuture: boolean;
-}) {
+}: DayBubbleProps) {
     return (
         <div className="flex flex-col items-center gap-1.5">
             {/* Circle */}

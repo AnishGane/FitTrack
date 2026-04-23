@@ -1,6 +1,6 @@
 "use client";
 
-import { StreakResult } from "@/algorithms/streak-consistency";
+import { StreakResult } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Flame } from "lucide-react";
 
@@ -45,6 +45,7 @@ function CircularProgress({ value }: { value: number }) {
 interface StreakCardProp {
     data: StreakResult
 }
+
 const StreakCard = ({ data }: StreakCardProp) => {
     const { currentStreak, consistencyScore, totalWorkoutsThisWeek, targetDaysPerWeek } = data;
 

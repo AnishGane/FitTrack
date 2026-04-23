@@ -9,7 +9,7 @@ const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql, { schema });
 
 const templates = [
-  // ── CHEST ──────────────────────────────────────────────────
+  // CHEST
   {
     name: "Barbell Bench Press",
     muscleGroup: "chest",
@@ -51,7 +51,7 @@ const templates = [
     defaultCaloriesBurned: 130,
   },
 
-  // ── BACK ───────────────────────────────────────────────────
+  // BACK
   {
     name: "Deadlift",
     muscleGroup: "back",
@@ -93,7 +93,7 @@ const templates = [
     defaultCaloriesBurned: 140,
   },
 
-  // ── LEGS ───────────────────────────────────────────────────
+  // LEGS
   {
     name: "Barbell Squat",
     muscleGroup: "legs",
@@ -135,7 +135,7 @@ const templates = [
     defaultCaloriesBurned: 160,
   },
 
-  // ── SHOULDERS ──────────────────────────────────────────────
+  // SHOULDERS
   {
     name: "Overhead Press",
     muscleGroup: "shoulders",
@@ -167,7 +167,7 @@ const templates = [
     defaultCaloriesBurned: 90,
   },
 
-  // ── ARMS ───────────────────────────────────────────────────
+  // ARMS
   {
     name: "Barbell Curl",
     muscleGroup: "arms",
@@ -199,7 +199,7 @@ const templates = [
     defaultCaloriesBurned: 90,
   },
 
-  // ── CORE ───────────────────────────────────────────────────
+  // CORE
   {
     name: "Plank",
     muscleGroup: "core",
@@ -231,7 +231,7 @@ const templates = [
     defaultCaloriesBurned: 90,
   },
 
-  // ── CARDIO ─────────────────────────────────────────────────
+  // CARDIO
   {
     name: "Treadmill Run",
     muscleGroup: "cardio",
@@ -288,7 +288,7 @@ const templates = [
     defaultCaloriesBurned: 260,
   },
 
-  // ── FULL BODY ──────────────────────────────────────────────
+  // FULL BODY
   {
     name: "Burpees",
     muscleGroup: "full_body",

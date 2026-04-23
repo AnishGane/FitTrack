@@ -1,12 +1,5 @@
 import { WorkoutLog } from "@/db/schema";
-
-// Streak & Consistency Algorithm
-export interface StreakResult {
-  currentStreak: number;
-  consistencyScore: number; // 0–100
-  totalWorkoutsThisWeek: number;
-  targetDaysPerWeek: number;
-}
+import { StreakResult } from "@/types";
 
 /**
  * STREAK & CONSISTENCY SCORING ALGORITHM

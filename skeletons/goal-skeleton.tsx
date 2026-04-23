@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function GoalSetterSkeleton() {
-    return <Skeleton className="h-80 w-full rounded-xl" />;
+    return <Skeleton className="h-96 w-full rounded-xl" />;
 }
 
 export function WeekProgressSkeleton() {

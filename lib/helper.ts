@@ -1,4 +1,5 @@
 import { WorkoutLog } from "@/db/schema";
+import { ChartDataPoint } from "@/types";
 
 export const getInitialsFromName = (name: string) => {
   return name
@@ -11,18 +12,10 @@ export function formatMuscleGroup(muscleGroup: string) {
   return muscleGroup.split("_").join(" ");
 }
 
-// Chart Data Helper
-export interface ChartDataPoint {
-  date: string; // "Oct 01"
-  duration: number; // total minutes
-  workouts: number; // count of workouts
-}
-
 /**
  * Transforms raw workout logs into chart-ready data points.
  * Groups logs by date and sums duration per day.
  */
-
 export function buildChartData(logs: WorkoutLog[]): ChartDataPoint[] {
   // Step 1 — group existing logs by date
   const grouped = new Map<string, { duration: number; workouts: number }>();

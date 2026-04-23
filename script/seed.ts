@@ -23,7 +23,7 @@ function daysAgo(n: number): Date {
 // SEED FUNCTIONS
 
 async function seedGoal() {
-  console.log("🌱 Seeding goal...");
+  console.log("Seeding goal...");
 
   await db.insert(goals).values({
     userId: TEST_USER_ID,
@@ -31,11 +31,11 @@ async function seedGoal() {
     targetValue: 4,
   });
 
-  console.log("✅ Goal seeded — 4 workouts per week");
+  console.log("Goal seeded — 4 workouts per week");
 }
 
 async function seedWorkoutLogs() {
-  console.log("🌱 Seeding workout logs...");
+  console.log("Seeding workout logs...");
 
   const logs: NewWorkoutLog[] = [
     // Week 1 (most recent)
@@ -249,18 +249,18 @@ async function seedWorkoutLogs() {
   ];
 
   await db.insert(workoutLogs).values(logs);
-  console.log(`✅ ${logs.length} workout logs seeded`);
+  console.log(`${logs.length} workout logs seeded`);
 }
 
 // MAIN — runs all seed functions in order
 
 async function main() {
-  console.log("🚀 Starting seed...\n");
+  console.log("Starting seed...\n");
 
   if (TEST_USER_ID != "kUCLoxoTxgeSxIE5OQKrIZaLHqrnywVD") {
-    console.error("❌ ERROR: You forgot to set TEST_USER_ID in seed.ts!");
-    console.error("   Run this in Drizzle Studio or Neon Console:");
-    console.error('   SELECT id, email FROM "user" LIMIT 5;');
+    console.error("ERROR: You forgot to set TEST_USER_ID in seed.ts!");
+    console.error("Run this in Drizzle Studio or Neon Console:");
+    console.error('SELECT id, email FROM "user" LIMIT 5;');
     process.exit(1);
   }
 
@@ -268,10 +268,10 @@ async function main() {
     await seedGoal();
     await seedWorkoutLogs();
 
-    console.log("\n✅ All seed data inserted successfully!");
+    console.log("\nAll seed data inserted successfully!");
     console.log("   Open Drizzle Studio to verify: npx drizzle-kit studio");
   } catch (error) {
-    console.error("\n❌ Seed failed:", error);
+    console.error("\n Seed failed:", error);
     process.exit(1);
   }
 

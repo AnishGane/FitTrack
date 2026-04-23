@@ -253,11 +253,11 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
                             <TableBody className="text-center">
                                 {isPending
                                     //  Loading skeletons
-                                    ? Array.from({ length: 5 }).map((_, i) => (
+                                    ? Array.from({ length: 10 }).map((_, i) => (
                                         <TableRow key={i} className="border-border">
-                                            {Array.from({ length: 7 }).map((_, j) => (
+                                            {Array.from({ length: 8 }).map((_, j) => (
                                                 <TableCell key={j}>
-                                                    <Skeleton className="h-4 w-full rounded" />
+                                                    <Skeleton className="h-10 w-full rounded" />
                                                 </TableCell>
                                             ))}
                                         </TableRow>
@@ -313,7 +313,7 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
-                                                                <AlertDialogCancel variant={"outline"} disabled={isDeletePending} className="cursor-pointer p-4.5">No, Keep it</AlertDialogCancel>
+                                                                <AlertDialogCancel variant={"outline"} disabled={isDeletePending} className="cursor-pointer py-4.5 px-5">No, Keep it</AlertDialogCancel>
                                                                 <Button
                                                                     onClick={() => handleDelete(log.id)}
                                                                     disabled={isDeletePending}
@@ -331,7 +331,9 @@ export function WorkoutHistoryTable({ initialData, savedWorkouts }: WorkoutHisto
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     </AlertDialog>
-                                                    <Button onClick={() => handleSaveWorkout(log.id)} variant={"ghost"} className="cursor-pointer">
+                                                    <Button
+                                                        disabled={getStatus(log.id).status === "saving" || getStatus(log.id).status === "unsaving"}
+                                                        onClick={() => handleSaveWorkout(log.id)} variant={"ghost"} className="cursor-pointer">
                                                         {getStatus(log.id).status === "saving" ? (
                                                             <Loader2 className="size-4 animate-spin" />
                                                         ) : getStatus(log.id).status === "saved" ? (

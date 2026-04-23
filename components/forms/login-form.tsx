@@ -176,7 +176,7 @@ export function LoginForm({
             }
           </Button>
           <FieldDescription className="text-center text-neutral-500! py-2">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account yet?{" "}
             <Link href="/signup">
               Sign up
             </Link>

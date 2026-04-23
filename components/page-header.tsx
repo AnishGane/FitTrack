@@ -6,7 +6,7 @@ const PageHeader = ({ title, description }: pageHeaderProps) => {
     return (
         <>
             <h1 className="text-2xl font-medium text-foreground">{title}</h1>
-            <p className="text-xs text-muted-foreground">{description}</p>
+            <p className="text-sm text-muted-foreground">{description}</p>
         </>
     )
 }

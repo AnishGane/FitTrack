@@ -1,6 +1,5 @@
 "use client";
 
-import { WorkoutRecommendation } from "@/algorithms/recommendation";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -9,6 +8,7 @@ import { ArrowRight, Zap } from "lucide-react";
 import { formatMuscleGroup } from "@/lib/helper";
 import { useRouter } from "next/navigation";
 import { useWorkoutPrefillStore } from "@/store/workout-prefill.store";
+import { WorkoutRecommendation } from "@/types";
 
 
 // Muscle group → badge color mapping (matches your design system)

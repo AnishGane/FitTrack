@@ -7,6 +7,7 @@ import PageHeader from '@/components/page-header';
 import WorkoutTemplate from '@/components/template/workout-template';
 import { Card } from '@/components/ui/card';
 import { WorkoutStatsSkeleton } from '@/skeletons/workout-stats-skeleton';
+import WorkoutTemplateSkeleton from '@/skeletons/workout-template-skeleton';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 
@@ -64,7 +65,11 @@ const WorkoutPage = async () => {
                     </Suspense>
                 </div>
                 <div className='flex-1'>
-                    <Suspense fallback={<WorkoutStatsSkeleton />}>
+                    <div className="flex flex-col">
+                        <h1 className='text-lg font-medium'>Workout Templates</h1>
+                        <p className='text-xs md:text-sm text-muted-foreground'>Choose your desired workout from the list of templates.</p>
+                    </div>
+                    <Suspense fallback={<WorkoutTemplateSkeleton />}>
                         <WorkoutTemplatesSection />
                     </Suspense>
                 </div>

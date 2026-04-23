@@ -4,13 +4,17 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid,
     Tooltip, Cell
 } from "recharts";
-import { ChartDataPoint } from "@/lib/helper";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useEffect, useState, useRef } from "react";
 import { CustomTooltip } from "../custom-tooltip";
+import { ChartDataPoint } from "@/types";
+
+interface WorkoutChartProps {
+    data: ChartDataPoint[];
+}
 
 // computed color value — works with oklch, hsl, hex, any format
-function useTailwindColor(className: string) {
+export function useTailwindColor(className: string) {
     const [color, setColor] = useState("#111111");
 
     useEffect(() => {
@@ -25,10 +29,6 @@ function useTailwindColor(className: string) {
     }, [className]);
 
     return color;
-}
-
-interface WorkoutChartProps {
-    data: ChartDataPoint[];
 }
 
 const WorkoutChart = ({ data }: WorkoutChartProps) => {
