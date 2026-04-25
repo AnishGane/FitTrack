@@ -1,6 +1,7 @@
 import { Dumbbell } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import { connection } from 'next/server'
+import React, { Suspense } from 'react'
 
 const layout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -32,21 +33,61 @@ const layout = ({ children }: { children: React.ReactNode }) => {
                         }}
                     />
                     {/* Main Content */}
-                    <div className="relative flex flex-col z-30 min-h-screen w-full max-w-md items-center justify-center px-8">
-                        <h2 className="text-5xl font-medium tracking-wide uppercase text-white mb-4 text-center">
-                            Welcome to <br /> FitTrack
-                        </h2>
-                        <p className="text-sm text-white/80 mt-4 mb-2 text-left">
-                            Your all-in-one workout tracker for setting, monitoring, and achieving your fitness goals.
-                        </p>
-                        <p className="text-sm text-white/80 text-right">
-                            Sign in to start logging your workouts, tracking progress, and staying motivated on your fitness journey.
-                        </p>
+                    <div className="relative flex flex-col z-30 min-h-screen w-full py-4 max-w-md items-center justify-center px-8">
+                        <div>
+                            <h2 className="text-5xl font-medium tracking-wide uppercase text-white mb-4 text-center">
+                                Welcome to <br /> FitTrack
+                            </h2>
+                            <p className="text-sm text-white/80 mt-4 mb-2 text-left">
+                                Your all-in-one workout tracker for setting, monitoring, and achieving your fitness goals.
+                            </p>
+                            <p className="text-sm text-white/80 text-right">
+                                Sign in to start logging your workouts, tracking progress, and staying motivated on your fitness journey.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="absolute bottom-4 w-full text-background px-8">
+                        <div className='flex items-center justify-between w-full'>
+                            <div className="flex-1 text-xs tracking-wide">
+                                <Suspense fallback={<div className='h-4 w-20 bg-background/40 rounded-md animate-pulse' />}>
+                                    <p>
+                                        &copy; {GetYear()} FitTrack. All rights reserved.
+                                    </p>
+                                </Suspense>
+                            </div>
+                            <div className="flex items-center justify-center gap-4 flex-1 z-40">
+                                <Link
+                                    href="/privacy-policy"
+                                    className="text-background/80 hover:text-background underline text-xs cursor-pointer"
+                                >
+                                    Privacy Policy
+                                </Link>
+                                <span className="mx-1 text-white/40">|</span>
+                                <Link
+                                    href="/terms-of-service"
+                                    className="text-background/80 hover:text-background underline text-xs cursor-pointer"
+                                >
+                                    Terms of Service
+                                </Link>
+                                <span className="mx-1 text-white/40">|</span>
+                                <Link
+                                    href="/cookie-policy"
+                                    className="text-background/80 hover:text-background underline text-xs cursor-pointer"
+                                >
+                                    Cookie Policy
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     )
+}
+
+async function GetYear() {
+    await connection();
+    return new Date().getFullYear();
 }
 
 export default layout
