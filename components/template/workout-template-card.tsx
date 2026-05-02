@@ -30,7 +30,7 @@ const WorkoutTemplateCard = ({ template, useCount }: WorkoutTemplateCardProps) =
     return (
         <Card
             onClick={handleClick}
-            className="relative p-5 cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all duration-200 group"
+            className="relative p-5 hover:ring-2 hover:ring-primary/50 transition-all duration-200 group"
         >
             {/* Top row */}
             <div className="flex justify-between items-center gap-1.5">

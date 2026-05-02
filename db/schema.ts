@@ -160,7 +160,7 @@ export const workoutTemplates = pgTable("workout_templates", {
   muscleGroup: muscleGroupEnum("muscle_group").notNull(),
   difficulty: difficultyEnum("difficulty").notNull(),
 
-  // ── Defaults (pre-filled in form) ───────────────────────────
+  // Defaults (pre-filled in form)
   defaultSets: integer("default_sets"),
   defaultReps: integer("default_reps"),
   defaultWeightKg: real("default_weight_kg"),

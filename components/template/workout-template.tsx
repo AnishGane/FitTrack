@@ -24,21 +24,24 @@ const WorkoutTemplateList = ({ template, usageMap }: WorkoutTemplateListProps) =
 
     return (
         <Tabs defaultValue="chest" className="mt-8">
-            <TabsList className="flex flex-wrap h-auto gap-1.5 bg-muted/40 rounded-xl w-full">
+            <TabsList className="flex flex-nowrap overflow-x-auto items-start gap-1.5 bg-muted/40 rounded-md w-full px-1 py-1 scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-thumb-rounded-full">
                 {TABS.map(({ value, label }) => (
                     <TabsTrigger
                         key={value}
                         value={value}
-                        className="gap-1.5 px-3 py-1.5 rounded-lg text-xs flex items-center justify-between sm:text-sm whitespace-nowrap data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer">
+                        className="gap-1.5 px-2.5 py-1.5 rounded-lg text-xs inline-flex items-center sm:text-sm whitespace-nowrap data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer shrink-0"
+                        style={{ minWidth: 'fit-content' }}
+                    >
                         <span>{label}</span>
                         {grouped[value]?.length > 0 && (
-                            <Badge className="text-[10px] bg-primary/80 py-2 px-1.5 rounded-full leading-none">
+                            <Badge className="text-[10px] bg-primary/80 py-2 px-1.5 rounded-full w-fit leading-none">
                                 {grouped[value].length}
                             </Badge>
                         )}
                     </TabsTrigger>
                 ))}
             </TabsList>
+
 
             {TABS.map(({ value, label }) => (
                 <TabsContent key={value} value={value} className="mt-4 focus-visible:outline-none">
