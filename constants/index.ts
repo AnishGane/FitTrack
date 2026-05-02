@@ -1,4 +1,19 @@
-import { LayoutDashboard, Dumbbell, Target, History } from "lucide-react";
+import { formatDuration } from "@/lib/helper";
+import { FitnessStats } from "@/types";
+import {
+  LayoutDashboard,
+  Target,
+  History,
+  BarChart2,
+  Activity,
+  Dumbbell,
+  Flame,
+  Route,
+  Timer,
+  TrendingUp,
+  Trophy,
+  Zap,
+} from "lucide-react";
 
 export const MUSCLE_GROUPS = [
   { value: "chest", label: "Chest" },
@@ -56,6 +71,7 @@ export const navItems = [
   { title: "Workout Log", url: "/workout", icon: Dumbbell },
   { title: "Goals", url: "/goals", icon: Target },
   { title: "History", url: "/history", icon: History },
+  { title: "Fitness", url: "/fitness", icon: BarChart2 },
 ];
 
 export const TABS = [
@@ -68,3 +84,62 @@ export const TABS = [
   { value: "cardio", label: "Cardio" },
   { value: "full_body", label: "Full Body" },
 ] as const;
+
+export const KPI_CONFIG = (stats: FitnessStats) => [
+  {
+    label: "Total Workouts",
+    value: stats.totalWorkouts.toLocaleString(),
+    icon: Dumbbell,
+    color: "text-primary",
+    bg: "bg-primary/10",
+  },
+  {
+    label: "Total Sets",
+    value: stats.totalSets.toLocaleString(),
+    icon: Activity,
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+  },
+  {
+    label: "Total Reps",
+    value: stats.totalReps.toLocaleString(),
+    icon: TrendingUp,
+    color: "text-purple-400",
+    bg: "bg-purple-500/10",
+  },
+  {
+    label: "Total Duration",
+    value: formatDuration(stats.totalDurationMin),
+    icon: Timer,
+    color: "text-yellow-400",
+    bg: "bg-yellow-500/10",
+  },
+  {
+    label: "Calories Burned",
+    value: `${stats.totalCaloriesBurned.toLocaleString()} kcal`,
+    icon: Flame,
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
+  },
+  {
+    label: "Distance Covered",
+    value: `${stats.totalDistanceKm.toFixed(1)} km`,
+    icon: Route,
+    color: "text-cyan-400",
+    bg: "bg-cyan-500/10",
+  },
+  {
+    label: "Current Streak",
+    value: `${stats.currentStreak} days`,
+    icon: Zap,
+    color: "text-green-400",
+    bg: "bg-green-500/10",
+  },
+  {
+    label: "Longest Streak",
+    value: `${stats.longestStreak} days`,
+    icon: Trophy,
+    color: "text-rose-400",
+    bg: "bg-rose-500/10",
+  },
+];
