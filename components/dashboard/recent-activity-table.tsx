@@ -274,7 +274,7 @@ const RecentActivityTable = ({ logs, savedWorkouts }: RecentActivityTableProps) 
                 <DialogContent className="sm:max-w-xl">
                     <DialogHeader>
                         <DialogTitle className="font-semibold text-xl">Workout Details</DialogTitle>
-                        <DialogDescription className="text-xs sm:text-[13px] -mt-1.5">
+                        <DialogDescription className="text-xs -mt-1.5">
                             {viewLog ? `Logged at ${format(viewLog.loggedAt, "MMM dd, yyyy")}` : null}
                         </DialogDescription>
                     </DialogHeader>

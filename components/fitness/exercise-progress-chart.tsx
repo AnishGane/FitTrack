@@ -47,10 +47,12 @@ export default function ExerciseProgressChart({ exercises }: ExerciseProgressCha
     const metric = hasWeight ? "weightKg" : hasDistance ? "distanceKm" : "durationMin";
     const metricLabel = metric === "weightKg" ? "kg" : metric === "distanceKm" ? "km" : "min";
 
-    const chartData = exercise.dataPoints.map((d) => ({
-        date: d.date ? d.date.slice(5) : "", // MM-DD
-        value: d[metric as keyof typeof d] ?? 0,
-    }));
+    const chartData = exercise.dataPoints
+        .filter((d) => d[metric as keyof typeof d] != null)
+        .map((d) => ({
+            date: d.date.slice(5), // MM-DD
+            value: d[metric as keyof typeof d] as number,
+        }));
 
     const colorClass = MUSCLE_COLORS[exercise.muscleGroup] ?? "";
 

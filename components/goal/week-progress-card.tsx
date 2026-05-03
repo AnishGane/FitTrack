@@ -183,7 +183,7 @@ async function StreakBanner() {
                     </div>
                 </div>
 
-                <Button className="py-6 px-5 rounded-2xl sm:rounded-r-2xl te sm:ml-2 w-full sm:w-fit cursor-pointer font-semibold tracking-wide">
+                <Button className="py-6 px-8 rounded-2xl sm:rounded-r-2xl sm:ml-2 w-full sm:w-fit cursor-pointer font-semibold tracking-wide">
                     <Link
                         href="/workout"
                         className="flex items-center gap-1.5 justify-center font-semibold text-base hover:opacity-80 transition-opacity shrink-0"

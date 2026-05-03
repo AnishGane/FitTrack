@@ -240,6 +240,9 @@ function computeWeeklyVolume(
   return weeks;
 }
 
+const formatDateKey = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
 function computeHeatmap(
   logs: (typeof workoutLogs.$inferSelect)[],
 ): HeatmapDay[] {
@@ -250,7 +253,7 @@ function computeHeatmap(
   for (const log of logs) {
     const d = new Date(log.loggedAt);
     if (d < cutoff) continue;
-    const key = d.toISOString().split("T")[0]!;
+    const key = formatDateKey(d);
     countMap.set(key, (countMap.get(key) ?? 0) + 1);
   }
 
@@ -259,7 +262,7 @@ function computeHeatmap(
   for (let i = 364; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().split("T")[0]!;
+    const key = formatDateKey(d);
     const count = countMap.get(key) ?? 0;
     const intensity =
       count === 0 ? 0 : count === 1 ? 1 : count === 2 ? 2 : count === 3 ? 3 : 4;

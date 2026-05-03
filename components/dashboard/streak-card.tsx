@@ -2,7 +2,6 @@
 
 import { StreakResult } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Flame } from "lucide-react";
 
 // Circular SVG progress ring
 function CircularProgress({ value }: { value: number }) {
@@ -51,24 +50,21 @@ const StreakCard = ({ data }: StreakCardProp) => {
 
     return (
         <Card className="bg-card border-border sm:p-4 flex justify-between sm:rounded-2xl">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardHeader>
                 <CardTitle className="text-sm font-semibold uppercase text-muted-foreground">
                     Streak &amp; Consistency
                 </CardTitle>
-                <Flame className="size-6 text-destructive" />
+
             </CardHeader>
 
             <CardContent className="space-y-4 mb-1">
                 {/* Streak + Ring row */}
                 <div className="flex items-center justify-between gap-4">
                     {/* Streak */}
-                    <div className="flex flex-col gap-1">
-                        <div className="flex items-center">
-                            <span className="text-5xl">🔥</span>
-                            <p className="text-5xl font-bold font-mono text-primary mt-2 leading-none">
-                                {currentStreak}
-                            </p>
-                        </div>
+                    <div className="flex flex-col items-center gap-1">
+                        <p className="text-7xl font-bold font-mono text-primary mt-2 leading-none">
+                            {currentStreak}
+                        </p>
                         <p className="text-[14px] ml-1 sm:ml-3 text-muted-foreground mt-1">Days active streak</p>
                     </div>
 
